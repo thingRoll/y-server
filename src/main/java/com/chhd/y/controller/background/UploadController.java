@@ -19,11 +19,18 @@ public class UploadController {
     @Autowired
     private UploadService uploadService;
 
-    @RequestMapping(value = "image", method = RequestMethod.POST)
+    @RequestMapping(value = "file", method = RequestMethod.POST)
     @ResponseBody
-    public Response image(@RequestParam MultipartFile file, HttpServletRequest request) {
+    public Response file(@RequestParam MultipartFile file, HttpServletRequest request) {
+        // ../Y-Server/target/y-server/upload 此目录缓存上传图片
         String path = request.getSession().getServletContext().getRealPath("upload");
-        uploadService.image(file, path);
-        return Response.createBySuccess();
+        return uploadService.file(file, path);
+    }
+
+    @RequestMapping(value = "files", method = RequestMethod.POST)
+    @ResponseBody
+    public Response files(@RequestParam MultipartFile[] file, HttpServletRequest request) {
+        String path = request.getSession().getServletContext().getRealPath("upload");
+        return uploadService.files(file, path);
     }
 }

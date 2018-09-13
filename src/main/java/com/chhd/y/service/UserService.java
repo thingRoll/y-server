@@ -1,17 +1,26 @@
 package com.chhd.y.service;
 
+import com.chhd.y.common.Constant;
 import com.chhd.y.common.Response;
 import com.chhd.y.pojo.User;
 
-public interface UserService {
+public interface UserService extends Constant {
 
     Response add(User user);
 
-    Response update(User user);
+    Response modify(User user);
 
     Response get(Long id);
 
-    Response login(String name, String password);
+    Response login(String account, String password);
 
-    Response resetPassword(Long id, String password);
+    Response modifyPassword(Long id, String password, String newPassword);
+
+    Response logout(Long id);
+
+    Response sendCodeForEmail(Long id, String email);
+
+    Response bindEmail(Long id, Integer code);
+
+    Response unbindEmail(Long id);
 }

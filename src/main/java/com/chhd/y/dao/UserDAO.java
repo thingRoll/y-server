@@ -10,9 +10,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserDAO extends MyBatisBaseDao<User, Long> {
 
-    User selectByLogin(@Param("name") String name, @Param("password") String password);
+    User selectByLogin(@Param("username") String username, @Param("password") String password);
 
     User selectByToken(String token);
 
     User selectByUsername(String username);
+
+    User selectByEmail(String username);
 }

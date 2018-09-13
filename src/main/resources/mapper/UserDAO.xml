@@ -3,18 +3,28 @@
 <mapper namespace="com.chhd.y.dao.UserDAO">
     <resultMap id="BaseResultMap" type="com.chhd.y.pojo.User">
         <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="account" jdbcType="VARCHAR" property="account"/>
         <result column="username" jdbcType="VARCHAR" property="username"/>
         <result column="password" jdbcType="VARCHAR" property="password"/>
         <result column="token" jdbcType="VARCHAR" property="token"/>
+        <result column="token_uid" jdbcType="VARCHAR" property="tokenUid"/>
         <result column="icon" jdbcType="VARCHAR" property="icon"/>
+        <result column="role" jdbcType="INTEGER" property="role"/>
         <result column="tel" jdbcType="BIGINT" property="tel"/>
         <result column="email" jdbcType="VARCHAR" property="email"/>
-        <result column="role" jdbcType="INTEGER" property="role"/>
+        <result column="email_code" jdbcType="INTEGER" property="emailCode"/>
+        <result column="email_state" jdbcType="INTEGER" property="emailState"/>
+        <result column="tel_code" jdbcType="INTEGER" property="telCode"/>
+        <result column="tel_state" jdbcType="INTEGER" property="telState"/>
+        <result column="disable" jdbcType="INTEGER" property="disable"/>
+        <result column="os" jdbcType="INTEGER" property="os"/>
+        <result column="device" jdbcType="VARCHAR" property="device"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, username, `password`, token, icon, tel, email, `role`, create_time, update_time
+    id, account, username, `password`, token, token_uid, icon, `role`, tel, email, email_code, 
+    email_state, tel_code, tel_state, `disable`, os, device, create_time, update_time
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
@@ -27,18 +37,29 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
     <insert id="insert" parameterType="com.chhd.y.pojo.User" useGeneratedKeys="true" keyProperty="id">
-    insert into user (id, username, `password`, 
-      token, icon, tel, email, `role`,
-      create_time, update_time)
-    values (#{id,jdbcType=BIGINT}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
-      #{token,jdbcType=VARCHAR}, #{icon,jdbcType=VARCHAR}, #{tel,jdbcType=BIGINT}, #{email,jdbcType=VARCHAR},
-      #{role,jdbcType=INTEGER}, now(), now())
+    insert into user (id, account, username, 
+      `password`, token, token_uid, 
+      icon, `role`, tel, email, 
+      email_code, email_state, tel_code, 
+      tel_state, `disable`, os, 
+      device, create_time, update_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{account,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
+      #{password,jdbcType=VARCHAR}, #{token,jdbcType=VARCHAR}, #{tokenUid,jdbcType=VARCHAR}, 
+      #{icon,jdbcType=VARCHAR}, #{role,jdbcType=INTEGER}, #{tel,jdbcType=BIGINT}, #{email,jdbcType=VARCHAR}, 
+      #{emailCode,jdbcType=INTEGER}, #{emailState,jdbcType=INTEGER}, #{telCode,jdbcType=INTEGER}, 
+      #{telState,jdbcType=INTEGER}, #{disable,jdbcType=INTEGER}, #{os,jdbcType=INTEGER}, 
+      #{device,jdbcType=VARCHAR}, now(), now()
+      )
   </insert>
     <insert id="insertSelective" parameterType="com.chhd.y.pojo.User" useGeneratedKeys="true" keyProperty="id">
         insert into user
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
                 id,
+            </if>
+            <if test="account != null">
+                account,
             </if>
             <if test="username != null">
                 username,
@@ -49,8 +70,14 @@
             <if test="token != null">
                 token,
             </if>
+            <if test="tokenUid != null">
+                token_uid,
+            </if>
             <if test="icon != null">
                 icon,
+            </if>
+            <if test="role != null">
+                `role`,
             </if>
             <if test="tel != null">
                 tel,
@@ -58,8 +85,26 @@
             <if test="email != null">
                 email,
             </if>
-            <if test="role != null">
-                `role`,
+            <if test="emailCode != null">
+                email_code,
+            </if>
+            <if test="emailState != null">
+                email_state,
+            </if>
+            <if test="telCode != null">
+                tel_code,
+            </if>
+            <if test="telState != null">
+                tel_state,
+            </if>
+            <if test="disable != null">
+                `disable`,
+            </if>
+            <if test="os != null">
+                os,
+            </if>
+            <if test="device != null">
+                device,
             </if>
             <if test="createTime != null">
                 create_time,
@@ -72,6 +117,9 @@
             <if test="id != null">
                 #{id,jdbcType=BIGINT},
             </if>
+            <if test="account != null">
+                #{account,jdbcType=VARCHAR},
+            </if>
             <if test="username != null">
                 #{username,jdbcType=VARCHAR},
             </if>
@@ -81,8 +129,14 @@
             <if test="token != null">
                 #{token,jdbcType=VARCHAR},
             </if>
+            <if test="tokenUid != null">
+                #{tokenUid,jdbcType=VARCHAR},
+            </if>
             <if test="icon != null">
                 #{icon,jdbcType=VARCHAR},
+            </if>
+            <if test="role != null">
+                #{role,jdbcType=INTEGER},
             </if>
             <if test="tel != null">
                 #{tel,jdbcType=BIGINT},
@@ -90,8 +144,26 @@
             <if test="email != null">
                 #{email,jdbcType=VARCHAR},
             </if>
-            <if test="role != null">
-                #{role,jdbcType=INTEGER},
+            <if test="emailCode != null">
+                #{emailCode,jdbcType=INTEGER},
+            </if>
+            <if test="emailState != null">
+                #{emailState,jdbcType=INTEGER},
+            </if>
+            <if test="telCode != null">
+                #{telCode,jdbcType=INTEGER},
+            </if>
+            <if test="telState != null">
+                #{telState,jdbcType=INTEGER},
+            </if>
+            <if test="disable != null">
+                #{disable,jdbcType=INTEGER},
+            </if>
+            <if test="os != null">
+                #{os,jdbcType=INTEGER},
+            </if>
+            <if test="device != null">
+                #{device,jdbcType=VARCHAR},
             </if>
             <if test="createTime != null">
                 now(),
@@ -104,6 +176,9 @@
     <update id="updateByPrimaryKeySelective" parameterType="com.chhd.y.pojo.User">
         update user
         <set>
+            <if test="account != null">
+                account = #{account,jdbcType=VARCHAR},
+            </if>
             <if test="username != null">
                 username = #{username,jdbcType=VARCHAR},
             </if>
@@ -113,8 +188,14 @@
             <if test="token != null">
                 token = #{token,jdbcType=VARCHAR},
             </if>
+            <if test="tokenUid != null">
+                token_uid = #{tokenUid,jdbcType=VARCHAR},
+            </if>
             <if test="icon != null">
-                token = #{icon,jdbcType=VARCHAR},
+                icon = #{icon,jdbcType=VARCHAR},
+            </if>
+            <if test="role != null">
+                `role` = #{role,jdbcType=INTEGER},
             </if>
             <if test="tel != null">
                 tel = #{tel,jdbcType=BIGINT},
@@ -122,8 +203,26 @@
             <if test="email != null">
                 email = #{email,jdbcType=VARCHAR},
             </if>
-            <if test="role != null">
-                `role` = #{role,jdbcType=INTEGER},
+            <if test="emailCode != null">
+                email_code = #{emailCode,jdbcType=INTEGER},
+            </if>
+            <if test="emailState != null">
+                email_state = #{emailState,jdbcType=INTEGER},
+            </if>
+            <if test="telCode != null">
+                tel_code = #{telCode,jdbcType=INTEGER},
+            </if>
+            <if test="telState != null">
+                tel_state = #{telState,jdbcType=INTEGER},
+            </if>
+            <if test="disable != null">
+                `disable` = #{disable,jdbcType=INTEGER},
+            </if>
+            <if test="os != null">
+                os = #{os,jdbcType=INTEGER},
+            </if>
+            <if test="device != null">
+                device = #{device,jdbcType=VARCHAR},
             </if>
             <if test="createTime != null">
                 create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -136,23 +235,34 @@
     </update>
     <update id="updateByPrimaryKey" parameterType="com.chhd.y.pojo.User">
     update user
-    set username = #{username,jdbcType=VARCHAR},
+    set account = #{account,jdbcType=VARCHAR},
+      username = #{username,jdbcType=VARCHAR},
       `password` = #{password,jdbcType=VARCHAR},
       token = #{token,jdbcType=VARCHAR},
+      token_uid = #{tokenUid,jdbcType=VARCHAR},
       icon = #{icon,jdbcType=VARCHAR},
+      `role` = #{role,jdbcType=INTEGER},
       tel = #{tel,jdbcType=BIGINT},
       email = #{email,jdbcType=VARCHAR},
-      `role` = #{role,jdbcType=INTEGER},
+      email_code = #{emailCode,jdbcType=INTEGER},
+      email_state = #{emailState,jdbcType=INTEGER},
+      tel_code = #{telCode,jdbcType=INTEGER},
+      tel_state = #{telState,jdbcType=INTEGER},
+      `disable` = #{disable,jdbcType=INTEGER},
+      os = #{os,jdbcType=INTEGER},
+      device = #{device,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = now()
     where id = #{id,jdbcType=BIGINT}
   </update>
 
+    <!-- 自定义方法 -->
+
     <select id="selectByLogin" resultMap="BaseResultMap" parameterType="map">
         SELECT
         <include refid="Base_Column_List"/>
         FROM user
-        WHERE username = #{name}
+        WHERE username = #{username}
         AND password = #{password}
     </select>
 
@@ -168,5 +278,12 @@
         <include refid="Base_Column_List"/>
         FROM user
         WHERE username = #{username}
+    </select>
+
+    <select id="selectByEmail" resultMap="BaseResultMap" parameterType="string">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM user
+        WHERE email = #{email}
     </select>
 </mapper>

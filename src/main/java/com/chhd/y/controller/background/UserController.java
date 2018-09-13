@@ -1,27 +1,19 @@
 package com.chhd.y.controller.background;
 
 import com.chhd.y.common.Response;
+import com.chhd.y.controller.BaseController;
 import com.chhd.y.pojo.User;
 import com.chhd.y.service.UserService;
-import com.chhd.y.util.JwtUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
-
 @RequestMapping("/user/")
 @Controller
-public class UserController {
+public class UserController extends BaseController {
 
-    Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
-
-    @Autowired
-    protected HttpServletRequest request;
     @Autowired
     private UserService userService;
 
@@ -31,24 +23,52 @@ public class UserController {
         return userService.add(user);
     }
 
-    @RequestMapping(value = "update.do", method = RequestMethod.POST)
+    @RequestMapping(value = "modify.do", method = RequestMethod.POST)
     @ResponseBody
-    public Response update(User user) {
-        String token = request.getHeader("token");
-        user.setId(JwtUtils.getLong(token, "id"));
-        return userService.update(user);
+    public Response modify(User user) {
+        user.setId(getUserId());
+        return userService.modify(user);
     }
 
     @RequestMapping(value = "get.do", method = RequestMethod.GET)
     @ResponseBody
     public Response get() {
-        String token = request.getHeader("token");
-        return userService.get(JwtUtils.getLong(token, "id"));
+        return userService.get(getUserId());
     }
 
     @RequestMapping(value = "login.do", method = RequestMethod.POST)
     @ResponseBody
-    public Response login(String username, String password) {
-        return userService.login(username, password);
+    public Response login(String account, String password) {
+        return userService.login(account, password);
+    }
+
+    @RequestMapping(value = "modify_password.do", method = RequestMethod.POST)
+    @ResponseBody
+    public Response modifyPassword(String password, String newPassword) {
+        return userService.modifyPassword(getUserId(), password, newPassword);
+    }
+
+    @RequestMapping(value = "logout.do", method = RequestMethod.GET)
+    @ResponseBody
+    public Response logout() {
+        return userService.logout(getUserId());
+    }
+
+    @RequestMapping(value = "send_code_for_email.do", method = RequestMethod.POST)
+    @ResponseBody
+    public Response sendCodeForEmail(String email) {
+        return userService.sendCodeForEmail(getUserId(), email);
+    }
+
+    @RequestMapping(value = "bind_email.do")
+    @ResponseBody
+    public Response bindEmail(Integer code) {
+        return userService.bindEmail(getUserId(), code);
+    }
+
+    @RequestMapping(value = "unbind_email.do")
+    @ResponseBody
+    public Response unbindEmail() {
+        return userService.unbindEmail(getUserId());
     }
 }

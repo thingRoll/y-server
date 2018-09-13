@@ -1,11 +1,13 @@
 package com.chhd.y.common;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.chhd.y.dao.UserDAO;
 import com.chhd.y.util.JsonUtils;
 import com.chhd.y.util.JwtUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -16,6 +18,9 @@ import java.io.PrintWriter;
 public class DefaultInterceptor implements HandlerInterceptor {
 
     Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
+
+    @Autowired
+    private UserDAO userDAO;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
@@ -30,24 +35,29 @@ public class DefaultInterceptor implements HandlerInterceptor {
         if (StringUtils.isBlank(os)) {
             writeResponse(response, JsonUtils.toJson(Response.createByInvalidHeader()));
             return false;
-        } else if (StringUtils.isBlank(token) && checkTokenWithoutUri(uri)) {
-            writeResponse(response, JsonUtils.toJson(Response.createByInvalidHeader()));
-            return false;
         }
-        DecodedJWT jwt = null;
-        if (StringUtils.isNotBlank(token)) {
-            jwt = JwtUtils.verifyJwt(token);
-        }
-        if (jwt == null && checkTokenWithoutUri(uri)) {
-            writeResponse(response, JsonUtils.toJson(Response.createByInvalidToken()));
-            return false;
+        if (!checkTokenWithoutUri(uri)) {
+            if (StringUtils.isBlank(token)) {
+                writeResponse(response, JsonUtils.toJson(Response.createByInvalidHeader()));
+                return false;
+            }
+            DecodedJWT jwt = JwtUtils.verifyJwt(token);
+            if (jwt == null) {
+                writeResponse(response, JsonUtils.toJson(Response.createByInvalidToken()));
+                return false;
+            } else {
+                String tokenUid = userDAO.selectByPrimaryKey(JwtUtils.getLong(token, "id")).getTokenUid();
+                if (!tokenUid.equals(JwtUtils.getString(token, "tokenUid"))) {
+                    writeResponse(response, JsonUtils.toJson(Response.createByInvalidToken()));
+                }
+            }
         }
         return true;
     }
 
-    private boolean checkTokenWithoutUri(String uri) {
-        return !("/user/login.do".equals(uri) ||
-                "/user/add.do".equals(uri));
+    private boolean checkTokenWithoutUri(String url) {
+        return "/user/login.do".equals(url) ||
+                "/user/add.do".equals(url);
     }
 
     private void writeResponse(HttpServletResponse response, String content) {
