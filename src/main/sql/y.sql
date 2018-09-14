@@ -11,7 +11,7 @@
  Target Server Version : 50721
  File Encoding         : 65001
 
- Date: 13/09/2018 18:44:09
+ Date: 14/09/2018 18:24:25
 */
 
 SET NAMES utf8mb4;
@@ -46,8 +46,9 @@ CREATE TABLE `article`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `article_category`;
 CREATE TABLE `article_category`  (
-  `id` bigint(50) NOT NULL,
-  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '名称',
+  `id` bigint(50) NOT NULL COMMENT '类别id',
+  `parent_id` bigint(50) NOT NULL COMMENT '如果父类别id=0，是根节点，一级类别',
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '名称',
   `is_plus` int(1) NOT NULL,
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
@@ -65,7 +66,7 @@ CREATE TABLE `article_visit`  (
   `user_id` bigint(50) NOT NULL COMMENT '用户id',
   `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
   `os` int(1) NULL DEFAULT NULL COMMENT '浏览平台，0=网页，1=安卓',
-  `device` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '网页，记录浏览器名称，安卓，记录设备名称',
+  `device` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '网页，记录浏览器名称，安卓，记录设备名称，未知填0',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE,
@@ -91,25 +92,26 @@ CREATE TABLE `user`  (
   `tel` bigint(50) NULL DEFAULT NULL COMMENT '手机号码',
   `email` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '邮箱',
   `email_code` int(10) NULL DEFAULT NULL COMMENT '绑定邮箱的验证码',
-  `email_state` int(1) NOT NULL COMMENT '邮箱状态，0=未激活，1=激活',
+  `email_state` int(1) NULL DEFAULT NULL COMMENT '邮箱状态，0=未激活，1=激活',
   `tel_code` int(10) NULL DEFAULT NULL COMMENT '绑定手机的验证码',
-  `tel_state` int(1) NOT NULL COMMENT '手机状态，0=未激活，1=激活',
-  `disable` int(1) NOT NULL COMMENT '状态，0=开启，1=禁用',
+  `tel_state` int(1) NULL DEFAULT NULL COMMENT '手机状态，0=未激活，1=激活',
+  `disable` int(1) NULL DEFAULT NULL COMMENT '状态，0=开启，1=禁用',
   `os` int(1) NULL DEFAULT NULL COMMENT '浏览平台，0=网页，1=安卓',
-  `device` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '网页，记录浏览器名称，安卓，记录设备名称',
+  `device` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '网页，记录浏览器名称，安卓，记录设备名称，未知填0',
   `create_time` datetime(0) NOT NULL COMMENT '创建时间',
   `update_time` datetime(0) NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `username`(`username`) USING BTREE COMMENT '用户名',
   UNIQUE INDEX `email`(`email`) USING BTREE COMMENT '邮箱'
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户列表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户列表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
 INSERT INTO `user` VALUES (1, 'admin', 'admin', 'a7ea664c576767c54e931d49747828b1', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlblVpZCI6ImQwZWMwYjkxLWIyYWUtNDg2Ny1hODhiLWVhODZiMTkzM2U3MSIsImlkIjoxLCJleHAiOjE1MzY4MTA0OTgsInVzZXJuYW1lIjoiYWRtaW4ifQ.xIB5QszDqevbyy6wrERkW-bv-Sf2eV7cLItCmOI8WlI', 'd0ec0b91-b2ae-4867-a88b-ea86b1933e71', NULL, 0, NULL, NULL, NULL, 0, NULL, 0, 0, NULL, NULL, '2018-09-06 17:06:48', '2018-09-12 11:48:55');
 INSERT INTO `user` VALUES (2, NULL, 'superuser', 'a7ea664c576767c54e931d49747828b1', NULL, NULL, NULL, 2, NULL, NULL, NULL, 0, NULL, 0, 0, NULL, NULL, '2018-09-06 17:09:17', '2018-09-07 11:49:53');
-INSERT INTO `user` VALUES (3, 'chhd', 'chhd', 'a7ea664c576767c54e931d49747828b1', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlblVpZCI6IjE1MzY3MjQxMTUyNTIiLCJpZCI6MywiZXhwIjoxNTM2OTE2ODc3LCJ1c2VybmFtZSI6ImNoaGQifQ.YXaDomQ7Lv965EmDzGJ5C1rh194kAmaf__6BeToZyH0', '1536724115252', NULL, 1, NULL, NULL, NULL, 1, NULL, 0, 0, NULL, NULL, '2018-09-07 13:51:10', '2018-09-13 17:21:17');
+INSERT INTO `user` VALUES (3, 'chhd', 'chhd', 'a7ea664c576767c54e931d49747828b1', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlblVpZCI6IjE1MzY3MjQxMTUyNTIiLCJpZCI6MywiZXhwIjoxNTM3MDAwNDExLCJ1c2VybmFtZSI6ImNoaGQifQ.2cFmOzwSu7fxyth0VB7-3V81l7HPS5XmAOjL4V-ZA6w', '1536724115252', NULL, 1, NULL, NULL, NULL, 1, NULL, 0, 0, NULL, NULL, '2018-09-07 13:51:10', '2018-09-14 16:33:31');
 INSERT INTO `user` VALUES (4, NULL, 'cwq', 'a7ea664c576767c54e931d49747828b1', NULL, NULL, NULL, 1, NULL, NULL, NULL, 0, NULL, 0, 0, NULL, NULL, '2018-09-07 14:38:46', '2018-09-07 14:38:46');
+INSERT INTO `user` VALUES (5, NULL, 'lidawen', 'a7ea664c576767c54e931d49747828b1', NULL, NULL, NULL, 1, NULL, 'lidawen@163.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2018-09-14 16:02:33', '2018-09-14 16:02:33');
 
 SET FOREIGN_KEY_CHECKS = 1;

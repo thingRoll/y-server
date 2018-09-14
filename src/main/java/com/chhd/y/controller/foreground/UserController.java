@@ -1,4 +1,4 @@
-package com.chhd.y.controller.background;
+package com.chhd.y.controller.foreground;
 
 import com.chhd.y.common.Response;
 import com.chhd.y.controller.BaseController;

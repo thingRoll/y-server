@@ -54,6 +54,7 @@
                 <!-- 设置日志输出格式 -->
                 %d{yyyy-MM-dd HH:mm:ss} [%level] %logger - %msg%n
             </pattern>
+            <charset>UTF-8</charset>
         </encoder>
     </appender>
 

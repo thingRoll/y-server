@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chhd.y.dao.ArticleCategoryDAO">
+  <resultMap id="BaseResultMap" type="com.chhd.y.pojo.ArticleCategory">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="is_plus" jdbcType="INTEGER" property="isPlus" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, parent_id, `name`, is_plus, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from article_category
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from article_category
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.chhd.y.pojo.ArticleCategory" useGeneratedKeys="true" keyProperty="id">
+    insert into article_category (id, parent_id, `name`, 
+      is_plus, create_time, update_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{parentId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
+      #{isPlus,jdbcType=INTEGER}, now(), now()
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.chhd.y.pojo.ArticleCategory" useGeneratedKeys="true" keyProperty="id">
+    insert into article_category
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="parentId != null">
+        parent_id,
+      </if>
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="isPlus != null">
+        is_plus,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="parentId != null">
+        #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="isPlus != null">
+        #{isPlus,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        now(),
+      </if>
+      <if test="updateTime != null">
+        now(),
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chhd.y.pojo.ArticleCategory">
+    update article_category
+    <set>
+      <if test="parentId != null">
+        parent_id = #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="isPlus != null">
+        is_plus = #{isPlus,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = now(),
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chhd.y.pojo.ArticleCategory">
+    update article_category
+    set parent_id = #{parentId,jdbcType=BIGINT},
+      `name` = #{name,jdbcType=VARCHAR},
+      is_plus = #{isPlus,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = now()
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
