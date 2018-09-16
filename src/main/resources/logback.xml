@@ -20,7 +20,7 @@
         <encoder>
             <pattern>
                 <!-- 设置日志输出格式 -->
-                %d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %logger - %msg%n
+                %d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %logger - %message%n
             </pattern>
         </encoder>
     </appender>
@@ -52,7 +52,7 @@
         <encoder>
             <pattern>
                 <!-- 设置日志输出格式 -->
-                %d{yyyy-MM-dd HH:mm:ss} [%level] %logger - %msg%n
+                %d{yyyy-MM-dd HH:mm:ss} [%level] %logger - %message%n
             </pattern>
             <charset>UTF-8</charset>
         </encoder>

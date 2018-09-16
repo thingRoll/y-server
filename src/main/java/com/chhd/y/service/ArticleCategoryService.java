@@ -5,5 +5,5 @@ import com.chhd.y.pojo.ArticleCategory;
 
 public interface ArticleCategoryService {
 
-    Response add(ArticleCategory category);
+    Response list(Long userId);
 }

@@ -5,12 +5,13 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="parent_id" jdbcType="BIGINT" property="parentId" />
     <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="is_plus" jdbcType="INTEGER" property="isPlus" />
+    <result column="sort" jdbcType="INTEGER" property="sort" />
+    <result column="plus" jdbcType="INTEGER" property="plus" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, parent_id, `name`, is_plus, create_time, update_time
+    id, parent_id, `name`, sort, plus, create_time, update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -24,11 +25,11 @@
   </delete>
   <insert id="insert" parameterType="com.chhd.y.pojo.ArticleCategory" useGeneratedKeys="true" keyProperty="id">
     insert into article_category (id, parent_id, `name`, 
-      is_plus, create_time, update_time
-      )
+      sort, plus, create_time, 
+      update_time)
     values (#{id,jdbcType=BIGINT}, #{parentId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
-      #{isPlus,jdbcType=INTEGER}, now(), now()
-      )
+      #{sort,jdbcType=INTEGER}, #{plus,jdbcType=INTEGER}, now(),
+      now())
   </insert>
   <insert id="insertSelective" parameterType="com.chhd.y.pojo.ArticleCategory" useGeneratedKeys="true" keyProperty="id">
     insert into article_category
@@ -42,8 +43,11 @@
       <if test="name != null">
         `name`,
       </if>
-      <if test="isPlus != null">
-        is_plus,
+      <if test="sort != null">
+        sort,
+      </if>
+      <if test="plus != null">
+        plus,
       </if>
       <if test="createTime != null">
         create_time,
@@ -62,8 +66,11 @@
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
-      <if test="isPlus != null">
-        #{isPlus,jdbcType=INTEGER},
+      <if test="sort != null">
+        #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="plus != null">
+        #{plus,jdbcType=INTEGER},
       </if>
       <if test="createTime != null">
         now(),
@@ -82,14 +89,17 @@
       <if test="name != null">
         `name` = #{name,jdbcType=VARCHAR},
       </if>
-      <if test="isPlus != null">
-        is_plus = #{isPlus,jdbcType=INTEGER},
+      <if test="sort != null">
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="plus != null">
+        plus = #{plus,jdbcType=INTEGER},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null">
-        update_time = now(),
+        now(),
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -98,9 +108,18 @@
     update article_category
     set parent_id = #{parentId,jdbcType=BIGINT},
       `name` = #{name,jdbcType=VARCHAR},
-      is_plus = #{isPlus,jdbcType=INTEGER},
+      sort = #{sort,jdbcType=INTEGER},
+      plus = #{plus,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = now()
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <!-- 自定义方法 -->
+  <select id="selectArticleCategoryByPlus" resultMap="BaseResultMap" parameterType="int">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM article_category
+    WHERE plus &lt;= #{plus}
+  </select>
 </mapper>

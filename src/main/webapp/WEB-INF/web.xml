@@ -22,11 +22,20 @@
     </filter-mapping>
 
     <filter>
-        <filter-name>DefaultFilter</filter-name>
-        <filter-class>com.chhd.y.common.DefaultFilter</filter-class>
+        <filter-name>log</filter-name>
+        <filter-class>com.chhd.y.LogFilter</filter-class>
     </filter>
     <filter-mapping>
-        <filter-name>DefaultFilter</filter-name>
+        <filter-name>log</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>cors</filter-name>
+        <filter-class>com.chhd.y.CORSFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>cors</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 

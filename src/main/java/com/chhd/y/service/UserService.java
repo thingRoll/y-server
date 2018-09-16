@@ -12,13 +12,13 @@ public interface UserService extends Constant {
 
     Response get(Long id);
 
-    Response login(String account, String password);
+    Response login(String account, String password, Integer os, String device);
 
     Response modifyPassword(Long id, String password, String newPassword);
 
     Response logout(Long id);
 
-    Response sendCodeForEmail(Long id, String email);
+    Response sendEmailCode(Long id, String email);
 
     Response bindEmail(Long id, Integer code);
 

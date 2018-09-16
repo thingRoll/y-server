@@ -257,7 +257,6 @@
   </update>
 
     <!-- 自定义方法 -->
-
     <select id="selectByLogin" resultMap="BaseResultMap" parameterType="map">
         SELECT
         <include refid="Base_Column_List"/>
@@ -265,21 +264,18 @@
         WHERE username = #{username}
         AND password = #{password}
     </select>
-
     <select id="selectByToken" resultMap="BaseResultMap" parameterType="string">
         SELECT
         <include refid="Base_Column_List"/>
         FROM user
         WHERE token = #{token}
     </select>
-
     <select id="selectByUsername" resultMap="BaseResultMap" parameterType="string">
         SELECT
         <include refid="Base_Column_List"/>
         FROM user
         WHERE username = #{username}
     </select>
-
     <select id="selectByEmail" resultMap="BaseResultMap" parameterType="string">
         SELECT
         <include refid="Base_Column_List"/>

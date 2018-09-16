@@ -39,7 +39,7 @@ public class UserController extends BaseController {
     @RequestMapping(value = "login.do", method = RequestMethod.POST)
     @ResponseBody
     public Response login(String account, String password) {
-        return userService.login(account, password);
+        return userService.login(account, password, getOs(), getDevice());
     }
 
     @RequestMapping(value = "modify_password.do", method = RequestMethod.POST)
@@ -54,10 +54,10 @@ public class UserController extends BaseController {
         return userService.logout(getUserId());
     }
 
-    @RequestMapping(value = "send_code_for_email.do", method = RequestMethod.POST)
+    @RequestMapping(value = "send_email_code.do", method = RequestMethod.POST)
     @ResponseBody
-    public Response sendCodeForEmail(String email) {
-        return userService.sendCodeForEmail(getUserId(), email);
+    public Response sendEmailCode(String email) {
+        return userService.sendEmailCode(getUserId(), email);
     }
 
     @RequestMapping(value = "bind_email.do")

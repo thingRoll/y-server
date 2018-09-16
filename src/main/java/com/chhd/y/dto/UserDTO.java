@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.io.Serializable;
 
-public class UserDto implements Serializable {
+public class UserDTO implements Serializable {
 
     /**
      * 用户id

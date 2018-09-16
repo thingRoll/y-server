@@ -8,8 +8,14 @@ import java.util.Date;
  * @author 
  */
 public class ArticleCategory implements Serializable {
+    /**
+     * 类别id
+     */
     private Long id;
 
+    /**
+     * 如果父类别id=0，是根节点，一级类别
+     */
     private Long parentId;
 
     /**
@@ -17,7 +23,12 @@ public class ArticleCategory implements Serializable {
      */
     private String name;
 
-    private Integer isPlus;
+    /**
+     * 排序，根节点优先级最高，越低越前，其次sort，越低越前，其次create_uptime，越新越后
+     */
+    private Integer sort;
+
+    private Integer plus;
 
     /**
      * 创建时间
@@ -55,12 +66,20 @@ public class ArticleCategory implements Serializable {
         this.name = name;
     }
 
-    public Integer getIsPlus() {
-        return isPlus;
+    public Integer getSort() {
+        return sort;
     }
 
-    public void setIsPlus(Integer isPlus) {
-        this.isPlus = isPlus;
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
+
+    public Integer getPlus() {
+        return plus;
+    }
+
+    public void setPlus(Integer plus) {
+        this.plus = plus;
     }
 
     public Date getCreateTime() {
@@ -94,7 +113,8 @@ public class ArticleCategory implements Serializable {
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
             && (this.getParentId() == null ? other.getParentId() == null : this.getParentId().equals(other.getParentId()))
             && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
-            && (this.getIsPlus() == null ? other.getIsPlus() == null : this.getIsPlus().equals(other.getIsPlus()))
+            && (this.getSort() == null ? other.getSort() == null : this.getSort().equals(other.getSort()))
+            && (this.getPlus() == null ? other.getPlus() == null : this.getPlus().equals(other.getPlus()))
             && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
             && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()));
     }
@@ -106,7 +126,8 @@ public class ArticleCategory implements Serializable {
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
         result = prime * result + ((getParentId() == null) ? 0 : getParentId().hashCode());
         result = prime * result + ((getName() == null) ? 0 : getName().hashCode());
-        result = prime * result + ((getIsPlus() == null) ? 0 : getIsPlus().hashCode());
+        result = prime * result + ((getSort() == null) ? 0 : getSort().hashCode());
+        result = prime * result + ((getPlus() == null) ? 0 : getPlus().hashCode());
         result = prime * result + ((getCreateTime() == null) ? 0 : getCreateTime().hashCode());
         result = prime * result + ((getUpdateTime() == null) ? 0 : getUpdateTime().hashCode());
         return result;
@@ -121,7 +142,8 @@ public class ArticleCategory implements Serializable {
         sb.append(", id=").append(id);
         sb.append(", parentId=").append(parentId);
         sb.append(", name=").append(name);
-        sb.append(", isPlus=").append(isPlus);
+        sb.append(", sort=").append(sort);
+        sb.append(", plus=").append(plus);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateTime=").append(updateTime);
         sb.append(", serialVersionUID=").append(serialVersionUID);

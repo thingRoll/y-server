@@ -1,4 +1,4 @@
-package com.chhd.y.common;
+package com.chhd.y;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,9 +13,9 @@ import java.util.Enumeration;
 import java.util.Map;
 import java.util.Set;
 
-public class DefaultFilter implements Filter {
+public class LogFilter implements Filter {
 
-    private Logger logger = LoggerFactory.getLogger(DefaultFilter.class);
+    private Logger logger = LoggerFactory.getLogger(LogFilter.class);
 
     ServletContext context;
 

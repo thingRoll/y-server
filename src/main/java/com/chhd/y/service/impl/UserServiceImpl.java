@@ -2,10 +2,9 @@ package com.chhd.y.service.impl;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.chhd.y.common.Constant;
 import com.chhd.y.common.Response;
 import com.chhd.y.dao.UserDAO;
-import com.chhd.y.dto.UserDto;
+import com.chhd.y.dto.UserDTO;
 import com.chhd.y.pojo.User;
 import com.chhd.y.service.UserService;
 import com.chhd.y.util.MD5Utils;
@@ -33,6 +32,7 @@ public class UserServiceImpl implements UserService {
             return checkData;
         }
         user.setPassword(MD5Utils.encode(user.getPassword()));
+        user.setRole(1);
         int row = userDAO.insert(user);
         if (row > 0) {
             return get(user.getId());
@@ -46,10 +46,6 @@ public class UserServiceImpl implements UserService {
             return Response.createByInvalidArgument("name is null");
         } else if (StringUtils.isBlank(user.getPassword())) {
             return Response.createByInvalidArgument("password is null");
-        } else if (user.getRole() == null) {
-            return Response.createByInvalidArgument("role is null");
-        } else if (user.getRole() == 0) {
-            return Response.createByInvalidArgument("role is invalid");
         } else if (userDAO.selectByUsername(user.getUsername()) != null) {
             return Response.createByError("用户已存在");
         }
@@ -92,18 +88,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public Response get(Long id) {
         User user = userDAO.selectByPrimaryKey(id);
-        UserDto userDto = toUserDto(user);
+        UserDTO userDto = toUserDto(user);
         userDto.setToken(null);
         return Response.createBySuccess(userDto);
     }
 
     @Override
-    public Response login(String account, String password) {
+    public Response login(String account, String password, Integer os, String device) {
         Response checkData = checkLoginData(account, password);
         if (checkData != null) {
             return checkData;
         }
-
         User user;
         if (account.matches(Regex.email.getS())) {
             user = userDAO.selectByEmail(account);
@@ -117,7 +112,7 @@ public class UserServiceImpl implements UserService {
         }
         if (user == null) {
             return Response.createByError("用户不存在");
-        } else if (MD5Utils.encode(password).equals(user.getPassword())) {
+        } else if (!MD5Utils.encode(password).equals(user.getPassword())) {
             return Response.createByError("密码错误");
         }
         if (StringUtils.isBlank(user.getTokenUid())) {
@@ -159,7 +154,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Response sendCodeForEmail(Long id, String email) {
+    public Response sendEmailCode(Long id, String email) {
         if (StringUtils.isBlank(email)) {
             return Response.createByInvalidArgument("email is null");
         } else if (!email.matches(Regex.email.getS())) {
@@ -246,8 +241,8 @@ public class UserServiceImpl implements UserService {
         return token;
     }
 
-    private UserDto toUserDto(User user) {
-        UserDto userDto = new UserDto();
+    private UserDTO toUserDto(User user) {
+        UserDTO userDto = new UserDTO();
         BeanUtils.copyProperties(user, userDto);
         return userDto;
     }

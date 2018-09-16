@@ -1,6 +1,7 @@
-package com.chhd.y.common;
+package com.chhd.y;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.chhd.y.common.Response;
 import com.chhd.y.dao.UserDAO;
 import com.chhd.y.util.JsonUtils;
 import com.chhd.y.util.JwtUtils;
@@ -15,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 
-public class DefaultInterceptor implements HandlerInterceptor {
+public class HeaderInterceptor implements HandlerInterceptor {
 
     Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
@@ -31,8 +32,17 @@ public class DefaultInterceptor implements HandlerInterceptor {
     private boolean checkHeader(HttpServletRequest request, HttpServletResponse response) {
         String uri = request.getRequestURI();
         String os = request.getHeader("os");
+        String device = request.getHeader("device");
         String token = request.getHeader("token");
         if (StringUtils.isBlank(os)) {
+            writeResponse(response, JsonUtils.toJson(Response.createByInvalidHeader()));
+            return false;
+        }
+        if (str2int(os) != 0 && str2int(os) != 1) {
+            writeResponse(response, JsonUtils.toJson(Response.createByInvalidHeader("无效的操作平台")));
+            return false;
+        }
+        if (StringUtils.isBlank(device)) {
             writeResponse(response, JsonUtils.toJson(Response.createByInvalidHeader()));
             return false;
         }
@@ -55,9 +65,20 @@ public class DefaultInterceptor implements HandlerInterceptor {
         return true;
     }
 
+    private int str2int(CharSequence value) {
+        try {
+            if (!StringUtils.isEmpty(value)) {
+                return Integer.parseInt(value.toString());
+            }
+        } catch (Exception ignored) {
+        }
+        return -1;
+    }
+
     private boolean checkTokenWithoutUri(String url) {
         return "/user/login.do".equals(url) ||
-                "/user/add.do".equals(url);
+                "/user/add.do".equals(url) ||
+                "/article/category/list.do".equals(url);
     }
 
     private void writeResponse(HttpServletResponse response, String content) {
