@@ -14,7 +14,7 @@ public class ArticleCategory implements Serializable {
     private Long id;
 
     /**
-     * 如果父类别id=0，是根节点，一级类别
+     * 如果父类别id=-1，是根节点，一级类别
      */
     private Long parentId;
 
@@ -39,6 +39,11 @@ public class ArticleCategory implements Serializable {
      * 更新时间
      */
     private Date updateTime;
+
+    /**
+     * base64编码的图标
+     */
+    private String icon;
 
     private static final long serialVersionUID = 1L;
 
@@ -98,6 +103,14 @@ public class ArticleCategory implements Serializable {
         this.updateTime = updateTime;
     }
 
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -116,7 +129,8 @@ public class ArticleCategory implements Serializable {
             && (this.getSort() == null ? other.getSort() == null : this.getSort().equals(other.getSort()))
             && (this.getPlus() == null ? other.getPlus() == null : this.getPlus().equals(other.getPlus()))
             && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
-            && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()));
+            && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()))
+            && (this.getIcon() == null ? other.getIcon() == null : this.getIcon().equals(other.getIcon()));
     }
 
     @Override
@@ -130,6 +144,7 @@ public class ArticleCategory implements Serializable {
         result = prime * result + ((getPlus() == null) ? 0 : getPlus().hashCode());
         result = prime * result + ((getCreateTime() == null) ? 0 : getCreateTime().hashCode());
         result = prime * result + ((getUpdateTime() == null) ? 0 : getUpdateTime().hashCode());
+        result = prime * result + ((getIcon() == null) ? 0 : getIcon().hashCode());
         return result;
     }
 
@@ -146,6 +161,7 @@ public class ArticleCategory implements Serializable {
         sb.append(", plus=").append(plus);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateTime=").append(updateTime);
+        sb.append(", icon=").append(icon);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

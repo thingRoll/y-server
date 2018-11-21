@@ -41,7 +41,7 @@ public class LogFilter implements Filter {
         sb.append("\n######################## 请求开始 ########################");
         sb.append("\n请求路径: " + url);
         Enumeration headerNames = req.getHeaderNames();
-        while (headerNames != null && headerNames.hasMoreElements()) {//循环遍历Header中的参数，把遍历出来的参数放入Map中
+        while (headerNames != null && headerNames.hasMoreElements()) { // 循环遍历Header中的参数，把遍历出来的参数放入Map中
             if (i == 0) {
                 sb.append("\n请求头部: \n");
                 i += 1;

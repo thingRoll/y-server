@@ -45,30 +45,30 @@ public class Response<T> {
     }
 
     public static Response createByError() {
-        return new Response(ResponseCode.ERROR.getCode(), "喵了个咪，" + ResponseCode.ERROR.getDesc());
+        return new Response(ResponseCode.ERROR.getCode(), ResponseCode.ERROR.getDesc());
     }
 
     public static Response createByError(String msg) {
-        return new Response(ResponseCode.ERROR.getCode(), "喵了个咪，" + msg);
+        return new Response(ResponseCode.ERROR.getCode(), msg);
     }
 
     public static Response createByInvalidArgument() {
-        return new Response(ResponseCode.INVALID_ARGUMENT.getCode(), "喵了个咪，" + ResponseCode.INVALID_ARGUMENT.getDesc());
+        return new Response(ResponseCode.INVALID_ARGUMENT.getCode(), ResponseCode.INVALID_ARGUMENT.getDesc());
     }
 
     public static Response createByInvalidArgument(String msg) {
-        return new Response(ResponseCode.INVALID_ARGUMENT.getCode(), "喵了个咪，" + msg);
+        return new Response(ResponseCode.INVALID_ARGUMENT.getCode(),  msg);
     }
 
     public static Response createByInvalidHeader() {
-        return new Response(ResponseCode.INVALID_HEADER.getCode(), "喵了个咪，" + ResponseCode.INVALID_HEADER.getDesc());
+        return new Response(ResponseCode.INVALID_HEADER.getCode(),  ResponseCode.INVALID_HEADER.getDesc());
     }
 
     public static Response createByInvalidHeader(String msg) {
-        return new Response(ResponseCode.INVALID_HEADER.getCode(), "喵了个咪，" + msg);
+        return new Response(ResponseCode.INVALID_HEADER.getCode(), msg);
     }
 
     public static Response createByInvalidToken() {
-        return new Response(ResponseCode.INVALID_TOKEN.getCode(), "喵了个咪，" + ResponseCode.INVALID_TOKEN.getDesc());
+        return new Response(ResponseCode.INVALID_TOKEN.getCode(), ResponseCode.INVALID_TOKEN.getDesc());
     }
 }

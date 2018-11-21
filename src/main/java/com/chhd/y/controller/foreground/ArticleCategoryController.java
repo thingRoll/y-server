@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @RequestMapping("/article/category/")
@@ -18,7 +19,8 @@ public class ArticleCategoryController extends BaseController {
 
     @RequestMapping(value = "list.do", method = RequestMethod.GET)
     @ResponseBody
-    public Response list() {
-        return articleCategoryService.list(getUserId());
+    public Response list(@RequestParam(value = "parentId", defaultValue = "-1") Long parentId) {
+        log(parentId + "");
+        return articleCategoryService.list(getUserId(), parentId);
     }
 }

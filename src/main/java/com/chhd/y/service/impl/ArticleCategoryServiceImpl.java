@@ -25,7 +25,7 @@ public class ArticleCategoryServiceImpl implements ArticleCategoryService {
     private ArticleCategoryDAO categoryDAO;
 
     @Override
-    public Response list(Long userId) {
+    public Response list(Long userId, Long parentId) {
         User user = userDAO.selectByPrimaryKey(userId);
         int plus;
         if (user == null || user.getRole() == 1) {
@@ -33,43 +33,32 @@ public class ArticleCategoryServiceImpl implements ArticleCategoryService {
         } else {
             plus = 1;
         }
-        List<ArticleCategory> articleCategoryList = categoryDAO.selectArticleCategoryByPlus(plus);
+        List<ArticleCategory> articleCategoryList = categoryDAO.selectArticleCategoryByParentId(parentId, plus);
         if (articleCategoryList != null) {
-            List<ArticleCategoryDTO> dtoList = Lists.newArrayList();
-            for (ArticleCategory articleCategory : articleCategoryList) {
-                if (articleCategory.getParentId() == 0) {
-                    ArticleCategoryDTO dto = new ArticleCategoryDTO();
-                    BeanUtils.copyProperties(articleCategory, dto);
-                    dtoList.add(dto);
-                }
-            }
-            Collections.sort(dtoList, new DefaultSort());
-            for (ArticleCategory articleCategory : articleCategoryList) {
-                if (articleCategory.getParentId() != 0) {
-                    ArticleCategoryDTO parent = getParentCategory(dtoList, articleCategory.getParentId());
-                    if (parent != null) {
-                        ArticleCategoryDTO dto = new ArticleCategoryDTO();
-                        BeanUtils.copyProperties(articleCategory, dto);
-                        parent.getChildList().add(dto);
-                    }
-                }
-            }
-            for (ArticleCategoryDTO dto : dtoList) {
-                Collections.sort(dto.getChildList(), new DefaultSort());
-            }
-            return Response.createBySuccess(dtoList);
+            return Response.createBySuccess(createArticleCategoryDTOList(parentId, plus));
         } else {
             return Response.createByError();
         }
     }
 
-    private ArticleCategoryDTO getParentCategory(List<ArticleCategoryDTO> list, Long parentId) {
-        for (ArticleCategoryDTO dto : list) {
-            if (Objects.equals(dto.getId(), parentId)) {
-                return dto;
-            }
+    private List<ArticleCategoryDTO> createArticleCategoryDTOList(
+            Long parentId,
+            int plus) {
+        List<ArticleCategoryDTO> dtoList = Lists.newArrayList();
+        List<ArticleCategory> articleCategoryList = categoryDAO.selectArticleCategoryByParentId(parentId, plus);
+        if (articleCategoryList.isEmpty()) {
+            return dtoList;
         }
-        return null;
+        for (ArticleCategory articleCategory : articleCategoryList) {
+            ArticleCategoryDTO dto = new ArticleCategoryDTO();
+            BeanUtils.copyProperties(articleCategory, dto);
+            dto.setIcon(null);
+            List<ArticleCategoryDTO> childList = createArticleCategoryDTOList(articleCategory.getId(), plus);
+            dto.setChildList(childList);
+            dtoList.add(dto);
+        }
+        Collections.sort(dtoList, new DefaultSort());
+        return dtoList;
     }
 
     private class DefaultSort implements Comparator<ArticleCategoryDTO> {

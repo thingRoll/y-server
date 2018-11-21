@@ -15,9 +15,19 @@
         (2)提供一些列：数据绑定，数字和日期的format @NumberFormat, @DateTimeFormat, xml,json默认读写支持
     -->
     <mvc:annotation-driven>
+        <!-- 处理responseBody 里面日期类型 -->
         <mvc:message-converters>
-            <!-- POST请求接受Json数据 -->
-            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <property name="objectMapper">
+                    <bean class="com.fasterxml.jackson.databind.ObjectMapper">
+                        <property name="dateFormat">
+                            <bean class="java.text.SimpleDateFormat">
+                                <constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss" />
+                            </bean>
+                        </property>
+                    </bean>
+                </property>
+            </bean>
         </mvc:message-converters>
     </mvc:annotation-driven>
 
@@ -47,4 +57,5 @@
         <!-- 使用 bean 定义一个 Interceptor，直接定义在 mvc:interceptors 下面的 Interceptor 将拦截所有的请求 -->
         <bean class="com.chhd.y.HeaderInterceptor"/>
     </mvc:interceptors>
+
 </beans>
