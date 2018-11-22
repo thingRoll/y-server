@@ -38,19 +38,19 @@
     delete from article
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.chhd.y.pojo.ArticleWithBLOBs">
+  <insert id="insert" parameterType="com.chhd.y.pojo.ArticleWithBLOBs"  useGeneratedKeys="true" keyProperty="id">
     insert into article (id, cover, title, 
       keyword, category_id, visit, 
       link, plus, `disable`, 
       create_time, update_time, summary, 
       content, hide_info)
     values (#{id,jdbcType=BIGINT}, #{cover,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
-      #{keyword,jdbcType=VARCHAR}, #{categoryId,jdbcType=BIGINT}, #{visit,jdbcType=INTEGER}, 
-      #{link,jdbcType=INTEGER}, #{plus,jdbcType=INTEGER}, #{disable,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{summary,jdbcType=LONGVARCHAR}, 
+      #{keyword,jdbcType=VARCHAR}, #{categoryId,jdbcType=BIGINT}, 0,
+      0, 0, 0,
+      now(), now(), #{summary,jdbcType=LONGVARCHAR},
       #{content,jdbcType=LONGVARCHAR}, #{hideInfo,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.chhd.y.pojo.ArticleWithBLOBs">
+  <insert id="insertSelective" parameterType="com.chhd.y.pojo.ArticleWithBLOBs"  useGeneratedKeys="true" keyProperty="id">
     insert into article
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -113,22 +113,22 @@
         #{categoryId,jdbcType=BIGINT},
       </if>
       <if test="visit != null">
-        #{visit,jdbcType=INTEGER},
+        0,
       </if>
       <if test="link != null">
-        #{link,jdbcType=INTEGER},
+        0,
       </if>
       <if test="plus != null">
-        #{plus,jdbcType=INTEGER},
+        0,
       </if>
       <if test="disable != null">
-        #{disable,jdbcType=INTEGER},
+        0,
       </if>
       <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
+        now(),
       </if>
       <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
+        now(),
       </if>
       <if test="summary != null">
         #{summary,jdbcType=LONGVARCHAR},
@@ -172,7 +172,7 @@
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        update_time = now(),
       </if>
       <if test="summary != null">
         summary = #{summary,jdbcType=LONGVARCHAR},
@@ -197,7 +197,7 @@
       plus = #{plus,jdbcType=INTEGER},
       `disable` = #{disable,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_time = now(),
       summary = #{summary,jdbcType=LONGVARCHAR},
       content = #{content,jdbcType=LONGVARCHAR},
       hide_info = #{hideInfo,jdbcType=LONGVARCHAR}
@@ -214,7 +214,7 @@
       plus = #{plus,jdbcType=INTEGER},
       `disable` = #{disable,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      update_time = now(),
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

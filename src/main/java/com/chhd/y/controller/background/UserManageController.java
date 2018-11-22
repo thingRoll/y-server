@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequestMapping("/manage/user/")
 @Controller
-public class UserManagerController {
+public class UserManageController {
 
 
 }

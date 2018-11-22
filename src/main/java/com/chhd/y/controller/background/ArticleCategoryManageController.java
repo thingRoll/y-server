@@ -7,9 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@RequestMapping("/manager/article/category/")
+@RequestMapping("/manage/article/category/")
 @Controller
-public class ArticleCategoryManagerController extends BaseController {
+public class ArticleCategoryManageController extends BaseController {
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
     public Response add(ArticleCategory category) {
