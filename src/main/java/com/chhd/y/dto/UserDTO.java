@@ -9,43 +9,36 @@ public class UserDTO implements Serializable {
     /**
      * 用户id
      */
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long id;
 
     /**
      * 用户名
      */
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String username;
 
     /**
      * 身份验证
      */
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String token;
 
     /**
      * 头像
      */
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String icon;
 
     /**
      * 手机号码
      */
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long tel;
 
     /**
      * 邮箱
      */
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String email;
 
     /**
      * 用户角色，0=管理员，1=普通用户
      */
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer role;
 
     private static final long serialVersionUID = 1L;

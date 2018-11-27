@@ -1,4 +1,4 @@
-package com.chhd.y.controller.foreground;
+package com.chhd.y.controller;
 
 import com.chhd.y.common.Response;
 import com.chhd.y.controller.BaseController;
@@ -20,7 +20,6 @@ public class ArticleCategoryController extends BaseController {
     @RequestMapping(value = "list.do", method = RequestMethod.GET)
     @ResponseBody
     public Response list(@RequestParam(value = "parentId", defaultValue = "-1") Long parentId) {
-        log(parentId + "");
         return articleCategoryService.list(getUserId(), parentId);
     }
 }

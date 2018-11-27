@@ -1,10 +1,10 @@
-package com.chhd.y.controller.foreground;
+package com.chhd.y.controller;
 
 import com.chhd.y.common.Response;
 import com.chhd.y.common.ResponseEditor;
+import com.chhd.y.controller.BaseController;
 import com.chhd.y.service.UploadService;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +18,7 @@ import java.util.Map;
 
 @RequestMapping("/upload/")
 @Controller
-public class UploadController {
+public class UploadController extends BaseController {
 
     @Autowired
     private UploadService uploadService;

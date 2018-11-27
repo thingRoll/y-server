@@ -35,13 +35,4 @@ public class BaseController {
         return -1L;
     }
 
-    protected void log(String... args) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("\n------------- Log Start -------------");
-        for (String arg : args) {
-            sb.append("\n").append(arg);
-        }
-        sb.append("\n------------- Log End -------------");
-        logger.info(sb.toString());
-    }
 }
