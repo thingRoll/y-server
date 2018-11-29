@@ -233,7 +233,7 @@ public class UserServiceImpl implements UserService {
                     .withClaim("id", user.getId())
                     .withClaim("username", user.getUsername())
                     .withClaim("tokenUid", user.getTokenUid())
-                    .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+                    .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 365 * 100))
                     .sign(algorithm);
         } catch (Exception e) {
             e.printStackTrace();

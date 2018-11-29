@@ -7,14 +7,14 @@ import com.chhd.y.dto.ArticleCategoryDTO;
 import com.chhd.y.pojo.ArticleCategory;
 import com.chhd.y.pojo.User;
 import com.chhd.y.service.ArticleCategoryService;
-import com.chhd.y.service.UserService;
 import com.google.common.collect.Lists;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 @Service("ArticleCategoryService")
 public class ArticleCategoryServiceImpl implements ArticleCategoryService {
@@ -33,7 +33,7 @@ public class ArticleCategoryServiceImpl implements ArticleCategoryService {
         } else {
             plus = 1;
         }
-        List<ArticleCategory> articleCategoryList = categoryDAO.selectArticleCategoryByParentId(parentId, plus);
+        List<ArticleCategory> articleCategoryList = categoryDAO.selectArticleCategoryByParentIdPlus(parentId, plus);
         if (articleCategoryList != null) {
             return Response.createBySuccess(createArticleCategoryDTOList(parentId, plus));
         } else {
@@ -45,7 +45,7 @@ public class ArticleCategoryServiceImpl implements ArticleCategoryService {
             Long parentId,
             int plus) {
         List<ArticleCategoryDTO> dtoList = Lists.newArrayList();
-        List<ArticleCategory> articleCategoryList = categoryDAO.selectArticleCategoryByParentId(parentId, plus);
+        List<ArticleCategory> articleCategoryList = categoryDAO.selectArticleCategoryByParentIdPlus(parentId, plus);
         if (articleCategoryList.isEmpty()) {
             return dtoList;
         }
@@ -54,7 +54,9 @@ public class ArticleCategoryServiceImpl implements ArticleCategoryService {
             BeanUtils.copyProperties(articleCategory, dto);
             dto.setIcon(null);
             List<ArticleCategoryDTO> childList = createArticleCategoryDTOList(articleCategory.getId(), plus);
-            dto.setChildList(childList);
+            if (!childList.isEmpty()) {
+                dto.setChildList(childList);
+            }
             dtoList.add(dto);
         }
         Collections.sort(dtoList, new DefaultSort());
@@ -72,6 +74,28 @@ public class ArticleCategoryServiceImpl implements ArticleCategoryService {
             } else {
                 return timeDiff;
             }
+        }
+    }
+
+    @Override
+    public Response disable(Long categoryId, int disable) {
+        ArticleCategory category = categoryDAO.selectByPrimaryKey(categoryId);
+        if (category == null) {
+            return Response.createByError("找不到文章分类");
+        }
+        category.setDisable(disable);
+        if (disable==1){
+            List<ArticleCategory> childList = categoryDAO.selectArticleCategoryByParentId(categoryId);
+            for (ArticleCategory child : childList) {
+                child.setDisable(disable);
+                categoryDAO.updateByPrimaryKeySelective(child);
+            }
+        }
+        int row = categoryDAO.updateByPrimaryKeySelective(category);
+        if (row > 0) {
+            return Response.createBySuccess();
+        } else {
+            return Response.createByError();
         }
     }
 }

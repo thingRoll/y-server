@@ -7,6 +7,7 @@
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="sort" jdbcType="INTEGER" property="sort"/>
         <result column="plus" jdbcType="INTEGER" property="plus"/>
+        <result column="disable" jdbcType="INTEGER" property="disable"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>
@@ -14,7 +15,7 @@
         <result column="icon" jdbcType="LONGVARCHAR" property="icon"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, parent_id, `name`, sort, plus, create_time, update_time
+    id, parent_id, `name`, sort, plus, `disable`, create_time, update_time
   </sql>
     <sql id="Blob_Column_List">
     icon
@@ -32,12 +33,14 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
     <insert id="insert" parameterType="com.chhd.y.pojo.ArticleCategory" useGeneratedKeys="true" keyProperty="id">
-    insert into article_category (id, parent_id, `name`,
-    sort, plus, create_time,
-    update_time, icon)
-    values (#{id,jdbcType=BIGINT}, #{parentId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR},
-    #{sort,jdbcType=INTEGER}, #{plus,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
-    now(), now())
+    insert into article_category (id, parent_id, `name`, 
+      sort, plus, `disable`, 
+      create_time, update_time, icon
+      )
+    values (#{id,jdbcType=BIGINT}, #{parentId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
+      #{sort,jdbcType=INTEGER}, #{plus,jdbcType=INTEGER}, #{disable,jdbcType=INTEGER}, 
+      now(), now(), #{icon,jdbcType=LONGVARCHAR}
+      )
   </insert>
     <insert id="insertSelective" parameterType="com.chhd.y.pojo.ArticleCategory" useGeneratedKeys="true"
             keyProperty="id">
@@ -57,6 +60,9 @@
             </if>
             <if test="plus != null">
                 plus,
+            </if>
+            <if test="disable != null">
+                `disable`,
             </if>
             <if test="createTime != null">
                 create_time,
@@ -84,14 +90,17 @@
             <if test="plus != null">
                 #{plus,jdbcType=INTEGER},
             </if>
+            <if test="disable != null">
+                #{disable,jdbcType=INTEGER},
+            </if>
             <if test="createTime != null">
-                #{createTime,jdbcType=TIMESTAMP},
+                now(),
             </if>
             <if test="updateTime != null">
                 now(),
             </if>
             <if test="icon != null">
-                now(),
+                #{icon,jdbcType=LONGVARCHAR},
             </if>
         </trim>
     </insert>
@@ -110,6 +119,9 @@
             <if test="plus != null">
                 plus = #{plus,jdbcType=INTEGER},
             </if>
+            <if test="disable != null">
+                `disable` = #{disable,jdbcType=INTEGER},
+            </if>
             <if test="createTime != null">
                 create_time = #{createTime,jdbcType=TIMESTAMP},
             </if>
@@ -122,15 +134,27 @@
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.chhd.y.pojo.ArticleCategory">
+    update article_category
+    set parent_id = #{parentId,jdbcType=BIGINT},
+      `name` = #{name,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=INTEGER},
+      plus = #{plus,jdbcType=INTEGER},
+      `disable` = #{disable,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = now(),
+      icon = #{icon,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
     <update id="updateByPrimaryKey" parameterType="com.chhd.y.pojo.ArticleCategory">
     update article_category
     set parent_id = #{parentId,jdbcType=BIGINT},
-    `name` = #{name,jdbcType=VARCHAR},
-    sort = #{sort,jdbcType=INTEGER},
-    plus = #{plus,jdbcType=INTEGER},
-    create_time = #{createTime,jdbcType=TIMESTAMP},
-    update_time = now(),
-    icon = #{icon,jdbcType=LONGVARCHAR}
+      `name` = #{name,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=INTEGER},
+      plus = #{plus,jdbcType=INTEGER},
+      `disable` = #{disable,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = now()
     where id = #{id,jdbcType=BIGINT}
   </update>
 
@@ -144,7 +168,7 @@
         WHERE plus &lt;= #{plus}
     </select>
 
-    <select id="selectArticleCategoryByParentId" resultMap="BaseResultMap" parameterType="map">
+    <select id="selectArticleCategoryByParentIdPlus" resultMap="BaseResultMap" parameterType="map">
         SELECT
         <include refid="Base_Column_List"/>
         ,
@@ -152,5 +176,14 @@
         FROM article_category
         WHERE parent_id = #{parentId}
         AND plus &lt;= #{plus}
+    </select>
+
+    <select id="selectArticleCategoryByParentId" resultMap="BaseResultMap" parameterType="long">
+        SELECT
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        FROM article_category
+        WHERE parent_id = #{parentId}
     </select>
 </mapper>

@@ -1,7 +1,6 @@
 package com.chhd.y.controller;
 
 import com.chhd.y.common.Response;
-import com.chhd.y.controller.BaseController;
 import com.chhd.y.service.ArticleCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,5 +20,11 @@ public class ArticleCategoryController extends BaseController {
     @ResponseBody
     public Response list(@RequestParam(value = "parentId", defaultValue = "-1") Long parentId) {
         return articleCategoryService.list(getUserId(), parentId);
+    }
+
+    @RequestMapping(value = "disable.do", method = RequestMethod.POST)
+    @ResponseBody
+    public Response disable(Long categoryId, int disable) {
+        return articleCategoryService.disable(categoryId, disable);
     }
 }

@@ -14,5 +14,7 @@ public interface ArticleCategoryDAO extends MyBatisBaseDao<ArticleCategory, Long
 
     List<ArticleCategory> selectArticleCategoryByPlus(int plus);
 
-    List<ArticleCategory> selectArticleCategoryByParentId(@Param("parentId") Long parentId, @Param("plus") int plus);
+    List<ArticleCategory> selectArticleCategoryByParentIdPlus(@Param("parentId") Long parentId, @Param("plus") int plus);
+
+    List<ArticleCategory> selectArticleCategoryByParentId(Long parentId);
 }

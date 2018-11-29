@@ -33,6 +33,11 @@ public class ArticleCategoryDTO {
     private Integer plus;
 
     /**
+     * 状态，0=开启，1=禁用
+     */
+    private Integer disable;
+
+    /**
      * 创建时间
      */
     private Date createTime;
@@ -42,7 +47,7 @@ public class ArticleCategoryDTO {
      */
     private String icon;
 
-    private List<ArticleCategoryDTO> childList = Lists.newArrayList();
+    private List<ArticleCategoryDTO> childList;
 
     public Long getId() {
         return id;
@@ -82,6 +87,14 @@ public class ArticleCategoryDTO {
 
     public void setPlus(Integer plus) {
         this.plus = plus;
+    }
+
+    public Integer getDisable() {
+        return disable;
+    }
+
+    public void setDisable(Integer disable) {
+        this.disable = disable;
     }
 
     public List<ArticleCategoryDTO> getChildList() {
