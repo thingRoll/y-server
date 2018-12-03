@@ -80,6 +80,8 @@ public class ArticleServiceImpl implements ArticleService {
         List<ArticleWithBLOBs> articleList = articleDAO.selectAll();
         List<ArticleDTO> articleDTOList = Lists.newArrayList();
         for (ArticleWithBLOBs old : articleList) {
+            old.setCover(old.getCover().replace(imgBaseUrlFlag, imgBaseUrl));
+            old.setContent(old.getContent().replace(imgBaseUrlFlag, imgBaseUrl));
             ArticleDTO articleDTO = new ArticleDTO();
             BeanUtils.copyProperties(old, articleDTO);
             articleDTOList.add(articleDTO);

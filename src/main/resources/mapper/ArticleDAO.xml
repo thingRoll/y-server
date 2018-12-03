@@ -8,7 +8,7 @@
         <result column="keyword" jdbcType="VARCHAR" property="keyword"/>
         <result column="category_id" jdbcType="BIGINT" property="categoryId"/>
         <result column="visit" jdbcType="INTEGER" property="visit"/>
-        <result column="link" jdbcType="INTEGER" property="link"/>
+        <result column="like" jdbcType="INTEGER" property="like"/>
         <result column="plus" jdbcType="INTEGER" property="plus"/>
         <result column="disable" jdbcType="INTEGER" property="disable"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
@@ -20,7 +20,7 @@
         <result column="hide_info" jdbcType="LONGVARCHAR" property="hideInfo"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, cover, title, keyword, category_id, visit, link, plus, `disable`, create_time, 
+    id, cover, title, keyword, category_id, visit, `like`, plus, `disable`, create_time,
     update_time
   </sql>
     <sql id="Blob_Column_List">
@@ -41,7 +41,7 @@
     <insert id="insert" parameterType="com.chhd.y.pojo.ArticleWithBLOBs" useGeneratedKeys="true" keyProperty="id">
     insert into article (id, cover, title, 
       keyword, category_id, visit, 
-      link, plus, `disable`, 
+      `like`, plus, `disable`,
       create_time, update_time, summary, 
       content, hide_info)
     values (#{id,jdbcType=BIGINT}, #{cover,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
@@ -72,8 +72,8 @@
             <if test="visit != null">
                 visit,
             </if>
-            <if test="link != null">
-                link,
+            <if test="like != null">
+                `like`,
             </if>
             <if test="plus != null">
                 plus,
@@ -116,7 +116,7 @@
             <if test="visit != null">
                 0,
             </if>
-            <if test="link != null">
+            <if test="like != null">
                 0,
             </if>
             <if test="plus != null">
@@ -160,8 +160,8 @@
             <if test="visit != null">
                 visit = #{visit,jdbcType=INTEGER},
             </if>
-            <if test="link != null">
-                link = #{link,jdbcType=INTEGER},
+            <if test="like != null">
+                `like` = #{like,jdbcType=INTEGER},
             </if>
             <if test="plus != null">
                 plus = #{plus,jdbcType=INTEGER},
@@ -194,7 +194,7 @@
       keyword = #{keyword,jdbcType=VARCHAR},
       category_id = #{categoryId,jdbcType=BIGINT},
       visit = #{visit,jdbcType=INTEGER},
-      link = #{link,jdbcType=INTEGER},
+      `like` = #{like,jdbcType=INTEGER},
       plus = #{plus,jdbcType=INTEGER},
       `disable` = #{disable,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -211,7 +211,7 @@
       keyword = #{keyword,jdbcType=VARCHAR},
       category_id = #{categoryId,jdbcType=BIGINT},
       visit = #{visit,jdbcType=INTEGER},
-      link = #{link,jdbcType=INTEGER},
+      `like` = #{like,jdbcType=INTEGER},
       plus = #{plus,jdbcType=INTEGER},
       `disable` = #{disable,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},

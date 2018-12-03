@@ -37,7 +37,7 @@ public class ArticleDTO {
     /**
      * 点赞量
      */
-    private Integer link;
+    private Integer like;
 
     private Integer plus;
 
@@ -119,12 +119,12 @@ public class ArticleDTO {
         this.visit = visit;
     }
 
-    public Integer getLink() {
-        return link;
+    public Integer getLike() {
+        return like;
     }
 
-    public void setLink(Integer link) {
-        this.link = link;
+    public void setLike(Integer like) {
+        this.like = like;
     }
 
     public Integer getPlus() {

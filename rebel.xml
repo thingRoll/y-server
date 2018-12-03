@@ -14,10 +14,10 @@
     </classpath>
 
     <web>
-        <link target="/">
+        <like target="/">
             <dir name="E:/IdeaProjects/Y-Server/src/main/webapp">
             </dir>
-        </link>
+        </like>
     </web>
 
 </application>
