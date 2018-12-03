@@ -3,14 +3,18 @@ package com.chhd.y.service.impl;
 import com.chhd.y.common.Response;
 import com.chhd.y.dao.ArticleDAO;
 import com.chhd.y.dto.ArticleDTO;
-import com.chhd.y.pojo.Article;
 import com.chhd.y.pojo.ArticleWithBLOBs;
 import com.chhd.y.service.ArticleService;
 import com.chhd.y.util.PropertiesUtils;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service("ArticleService")
 public class ArticleServiceImpl implements ArticleService {
@@ -68,5 +72,19 @@ public class ArticleServiceImpl implements ArticleService {
         } else {
             return Response.createByError();
         }
+    }
+
+    @Override
+    public Response list(int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<ArticleWithBLOBs> articleList = articleDAO.selectAll();
+        List<ArticleDTO> articleDTOList = Lists.newArrayList();
+        for (ArticleWithBLOBs old : articleList) {
+            ArticleDTO articleDTO = new ArticleDTO();
+            BeanUtils.copyProperties(old, articleDTO);
+            articleDTOList.add(articleDTO);
+        }
+        PageInfo pageInfo = new PageInfo<>(articleDTOList);
+        return Response.createBySuccess(pageInfo);
     }
 }

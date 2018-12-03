@@ -2,6 +2,7 @@ package com.chhd.y.service.impl;
 
 import com.chhd.y.common.Response;
 import com.chhd.y.dao.ArticleCategoryDAO;
+import com.chhd.y.dao.ArticleDAO;
 import com.chhd.y.dao.UserDAO;
 import com.chhd.y.dto.ArticleCategoryDTO;
 import com.chhd.y.pojo.ArticleCategory;
@@ -23,6 +24,8 @@ public class ArticleCategoryServiceImpl implements ArticleCategoryService {
     private UserDAO userDAO;
     @Autowired
     private ArticleCategoryDAO categoryDAO;
+    @Autowired
+    private ArticleDAO articleDAO;
 
     @Override
     public Response list(Long userId, Long parentId) {
@@ -52,7 +55,8 @@ public class ArticleCategoryServiceImpl implements ArticleCategoryService {
         for (ArticleCategory articleCategory : articleCategoryList) {
             ArticleCategoryDTO dto = new ArticleCategoryDTO();
             BeanUtils.copyProperties(articleCategory, dto);
-            dto.setIcon(null);
+//            dto.setIcon(null);
+            dto.setNum(articleDAO.selectCount(articleCategory.getId()));
             List<ArticleCategoryDTO> childList = createArticleCategoryDTOList(articleCategory.getId(), plus);
             if (!childList.isEmpty()) {
                 dto.setChildList(childList);
@@ -84,7 +88,7 @@ public class ArticleCategoryServiceImpl implements ArticleCategoryService {
             return Response.createByError("找不到文章分类");
         }
         category.setDisable(disable);
-        if (disable==1){
+        if (disable == 1) {
             List<ArticleCategory> childList = categoryDAO.selectArticleCategoryByParentId(categoryId);
             for (ArticleCategory child : childList) {
                 child.setDisable(disable);

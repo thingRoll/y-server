@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @RequestMapping("/article/")
@@ -26,5 +27,12 @@ public class ArticleController {
     @ResponseBody
     public Response detail(Long id) {
         return articleService.detail(id);
+    }
+
+    @RequestMapping(value = "list.do", method = RequestMethod.GET)
+    @ResponseBody
+    public Response list(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
+                         @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
+        return articleService.list(pageNum, pageSize);
     }
 }

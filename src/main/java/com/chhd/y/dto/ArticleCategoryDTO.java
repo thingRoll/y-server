@@ -49,6 +49,8 @@ public class ArticleCategoryDTO {
 
     private List<ArticleCategoryDTO> childList;
 
+    private int num;
+
     public Long getId() {
         return id;
     }
@@ -119,5 +121,13 @@ public class ArticleCategoryDTO {
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public int getNum() {
+        return num;
+    }
+
+    public void setNum(int num) {
+        this.num = num;
     }
 }
