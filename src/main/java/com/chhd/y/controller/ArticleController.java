@@ -35,4 +35,10 @@ public class ArticleController {
                          @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
         return articleService.list(pageNum, pageSize);
     }
+
+    @RequestMapping(value = "disable.do", method = RequestMethod.POST)
+    @ResponseBody
+    public Response disable(long id, int disable) {
+        return articleService.disable(id, disable);
+    }
 }

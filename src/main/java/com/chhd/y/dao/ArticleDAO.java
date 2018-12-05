@@ -12,4 +12,5 @@ public interface ArticleDAO extends MyBatisBaseDao<ArticleWithBLOBs, Long> {
     int selectCount(Long categoryId);
 
     List<ArticleWithBLOBs> selectAll();
+
 }

@@ -1,6 +1,7 @@
 package com.chhd.y.service.impl;
 
 import com.chhd.y.common.Response;
+import com.chhd.y.dao.ArticleCategoryDAO;
 import com.chhd.y.dao.ArticleDAO;
 import com.chhd.y.dto.ArticleDTO;
 import com.chhd.y.pojo.ArticleWithBLOBs;
@@ -24,6 +25,8 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Autowired
     private ArticleDAO articleDAO;
+    @Autowired
+    private ArticleCategoryDAO articleCategoryDAO;
 
     @Override
     public Response add(ArticleWithBLOBs article) {
@@ -84,9 +87,26 @@ public class ArticleServiceImpl implements ArticleService {
             old.setContent(old.getContent().replace(imgBaseUrlFlag, imgBaseUrl));
             ArticleDTO articleDTO = new ArticleDTO();
             BeanUtils.copyProperties(old, articleDTO);
+            String categoryName = articleCategoryDAO.selectByPrimaryKey(articleDTO.getCategoryId()).getName();
+            articleDTO.setCategoryName(categoryName);
             articleDTOList.add(articleDTO);
         }
         PageInfo pageInfo = new PageInfo<>(articleDTOList);
         return Response.createBySuccess(pageInfo);
+    }
+
+    @Override
+    public Response disable(long id, int disable) {
+        ArticleWithBLOBs article = articleDAO.selectByPrimaryKey(id);
+        if (article == null) {
+            return Response.createByError("找不到文章");
+        }
+        article.setDisable(disable);
+        int row = articleDAO.updateByPrimaryKeySelective(article);
+        if (row > 0) {
+            return Response.createBySuccess(article);
+        } else {
+            return Response.createByError();
+        }
     }
 }
