@@ -32,6 +32,7 @@ public class FtpUtils {
             client.setControlEncoding("UTF-8");
             client.setFileType(FTPClient.BINARY_FILE_TYPE);
             client.enterLocalPassiveMode();
+            client.changeWorkingDirectory("/y");
             for (File fileItem : fileList) {
                 fis = new FileInputStream(fileItem);
                 client.storeFile(fileItem.getName(), fis);

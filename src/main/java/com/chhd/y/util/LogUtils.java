@@ -10,13 +10,13 @@ public class LogUtils {
     private LogUtils() {
     }
 
-    public static void i(String... args) {
+    public static void d(String... args) {
         StringBuilder sb = new StringBuilder();
         sb.append("\n------------- Log Start -------------");
         for (String arg : args) {
             sb.append("\n").append(arg);
         }
         sb.append("\n------------- Log End -------------");
-        logger.info(sb.toString());
+        logger.debug(sb.toString());
     }
 }

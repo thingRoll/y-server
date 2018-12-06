@@ -4,11 +4,15 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.chhd.y.common.Response;
 import com.chhd.y.dao.UserDAO;
+import com.chhd.y.dto.PageInfoDTO;
 import com.chhd.y.dto.UserDTO;
 import com.chhd.y.pojo.User;
 import com.chhd.y.service.UserService;
 import com.chhd.y.util.MD5Utils;
 import com.chhd.y.util.MailUtils;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -16,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -207,6 +212,22 @@ public class UserServiceImpl implements UserService {
         } else {
             return Response.createByError();
         }
+    }
+
+    @Override
+    public Response list(int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<User> userList = userDAO.selectAll();
+        List<UserDTO> userDTOList = Lists.newArrayList();
+        for (User user : userList) {
+            UserDTO userDTO = new UserDTO();
+            BeanUtils.copyProperties(user, userDTO);
+            userDTOList.add(userDTO);
+        }
+        PageInfo<UserDTO> pageInfo = new PageInfo<>(userDTOList);
+        PageInfoDTO pageInfoDTO = new PageInfoDTO();
+        BeanUtils.copyProperties(pageInfo, pageInfoDTO);
+        return Response.createBySuccess(pageInfoDTO);
     }
 
     private Response checkModifyPwdData(Long id, String password, String newPassword) {

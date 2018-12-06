@@ -282,4 +282,9 @@
         FROM user
         WHERE email = #{email}
     </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM user
+    </select>
 </mapper>

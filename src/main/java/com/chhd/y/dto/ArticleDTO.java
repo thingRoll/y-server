@@ -24,6 +24,9 @@ public class ArticleDTO {
      */
     private String keyword;
 
+    private Long parentId;
+    private String parentName;
+
     /**
      * 分类id
      */
@@ -103,6 +106,22 @@ public class ArticleDTO {
 
     public void setKeyword(String keyword) {
         this.keyword = keyword;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
+    public String getParentName() {
+        return parentName;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
     }
 
     public Long getCategoryId() {

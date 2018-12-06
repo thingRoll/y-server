@@ -23,4 +23,6 @@ public interface UserService extends Constant {
     Response bindEmail(Long id, Integer code);
 
     Response unbindEmail(Long id);
+
+    Response list(int pageNum,int pageSize);
 }

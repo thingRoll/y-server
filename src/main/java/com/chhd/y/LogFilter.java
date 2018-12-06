@@ -26,10 +26,10 @@ public class LogFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filter) throws IOException, ServletException {
-        if (false) {
-            filter.doFilter(request, response);
-            return;
-        }
+//        if (false) {
+//            filter.doFilter(request, response);
+//            return;
+//        }
         long start = System.currentTimeMillis();
         StringBuilder sb = new StringBuilder();
         if (!(request instanceof HttpServletRequest)) {
@@ -38,56 +38,61 @@ public class LogFilter implements Filter {
         int i = 0;
         HttpServletRequest req = (HttpServletRequest) request;
         String url = req.getRequestURI();
-        sb.append("\n######################## 请求开始 ########################");
-        sb.append("\n请求路径: " + url);
-        Enumeration headerNames = req.getHeaderNames();
-        while (headerNames != null && headerNames.hasMoreElements()) { // 循环遍历Header中的参数，把遍历出来的参数放入Map中
-            if (i == 0) {
-                sb.append("\n请求头部: \n");
-                i += 1;
+        if (url.endsWith(".do")) {
+            sb.append("\n######################## 请求开始 ########################");
+            sb.append("\n请求路径: " + url);
+            Enumeration headerNames = req.getHeaderNames();
+            while (headerNames != null && headerNames.hasMoreElements()) { // 循环遍历Header中的参数，把遍历出来的参数放入Map中
+                if (i == 0) {
+                    sb.append("\n请求头部: \n");
+                    i += 1;
+                }
+                String key = headerNames.nextElement().toString();
+                String value = req.getHeader(key);
+                sb.append(key + ": " + value + " & ");
             }
-            String key = headerNames.nextElement().toString();
-            String value = req.getHeader(key);
-            sb.append(key + ": " + value + " & ");
-        }
-        Map<String, String[]> parameterMap = request.getParameterMap();
-        Set<Map.Entry<String, String[]>> entries = parameterMap.entrySet();
-        if (entries.size() != 0) {
-            sb.append("\n拼接参数: \n");
-        }
-        for (Map.Entry<String, String[]> map : entries) {
-            for (String value : map.getValue()) {
-                sb.append(map.getKey() + ": " + value + " & ");
+            Map<String, String[]> parameterMap = request.getParameterMap();
+            Set<Map.Entry<String, String[]>> entries = parameterMap.entrySet();
+            if (entries.size() != 0) {
+                sb.append("\n拼接参数: \n");
             }
-        }
-        i = 0;
-        RequestWrapper requestWrapper = new RequestWrapper(req);
-        BufferedReader bufferedReader = requestWrapper.getReader();
-        String line;
-        while ((line = bufferedReader.readLine()) != null) {
-            if (i == 0) {
-                sb.append("\n请求参数: \n");
-                i += 1;
+            for (Map.Entry<String, String[]> map : entries) {
+                for (String value : map.getValue()) {
+                    sb.append(map.getKey() + ": " + value + " & ");
+                }
             }
-            sb.append(line);
+            i = 0;
+            RequestWrapper requestWrapper = new RequestWrapper(req);
+            BufferedReader bufferedReader =
+                    new BufferedReader(new InputStreamReader(requestWrapper.getInputStream(), "UTF-8"));
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                if (i == 0) {
+                    sb.append("\n请求参数: \n");
+                    i += 1;
+                }
+                sb.append(line);
+            }
+            if (!(response instanceof HttpServletResponse)) {
+                return;
+            }
+            HttpServletResponse resp = (HttpServletResponse) response;
+            ResponseWrapper responseWrapper = new ResponseWrapper(resp);
+            filter.doFilter(requestWrapper, responseWrapper);
+            String result = new String(responseWrapper.getResponseData(), "UTF-8");
+            response.setContentLength(-1); // 解决可能在运行的过程中页面只输出一部分
+            response.setCharacterEncoding("UTF-8");
+            PrintWriter out = response.getWriter();
+            out.write(result);
+            out.flush();
+            out.close();
+            sb.append("\n请求结果:\n" + result);
+            long end = System.currentTimeMillis();
+            sb.append("\n######################## 请求结束 ########################(" + (end - start) + "ms)\n");
+            logger.info(sb.toString());
+        } else {
+            filter.doFilter(request, response);
         }
-        if (!(response instanceof HttpServletResponse)) {
-            return;
-        }
-        HttpServletResponse resp = (HttpServletResponse) response;
-        ResponseWrapper responseWrapper = new ResponseWrapper(resp);
-        filter.doFilter(requestWrapper, responseWrapper);
-        String result = new String(responseWrapper.getResponseData(), "utf-8");
-        response.setContentLength(-1); // 解决可能在运行的过程中页面只输出一部分
-        response.setCharacterEncoding("utf-8");
-        PrintWriter out = response.getWriter();
-        out.write(result);
-        out.flush();
-        out.close();
-        sb.append("\n请求结果:\n" + result);
-        long end = System.currentTimeMillis();
-        sb.append("\n######################## 请求结束 ########################(" + (end - start) + "ms)\n");
-        logger.info(sb.toString());
     }
 
     @Override

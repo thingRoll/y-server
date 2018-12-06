@@ -4,6 +4,7 @@ import com.chhd.y.common.Response;
 import com.chhd.y.dao.ArticleCategoryDAO;
 import com.chhd.y.dao.ArticleDAO;
 import com.chhd.y.dto.ArticleDTO;
+import com.chhd.y.dto.PageInfoDTO;
 import com.chhd.y.pojo.ArticleWithBLOBs;
 import com.chhd.y.service.ArticleService;
 import com.chhd.y.util.PropertiesUtils;
@@ -71,6 +72,8 @@ public class ArticleServiceImpl implements ArticleService {
             article.setContent(article.getContent().replace(imgBaseUrlFlag, imgBaseUrl));
             ArticleDTO articleDTO = new ArticleDTO();
             BeanUtils.copyProperties(article, articleDTO);
+            String categoryName = articleCategoryDAO.selectByPrimaryKey(articleDTO.getCategoryId()).getName();
+            articleDTO.setCategoryName(categoryName);
             return Response.createBySuccess(articleDTO);
         } else {
             return Response.createByError();
@@ -92,7 +95,9 @@ public class ArticleServiceImpl implements ArticleService {
             articleDTOList.add(articleDTO);
         }
         PageInfo pageInfo = new PageInfo<>(articleDTOList);
-        return Response.createBySuccess(pageInfo);
+        PageInfoDTO pageInfoDTO = new PageInfoDTO();
+        BeanUtils.copyProperties(pageInfo, pageInfoDTO);
+        return Response.createBySuccess(pageInfoDTO);
     }
 
     @Override

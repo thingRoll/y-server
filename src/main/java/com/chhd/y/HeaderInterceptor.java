@@ -29,36 +29,45 @@ public class HeaderInterceptor implements HandlerInterceptor {
         return checkHeader(request, response);
     }
 
+    /*
+     * os 1:网页，
+     * device
+     *  网页：postman，api，chrome，
+     * token
+     */
+
     private boolean checkHeader(HttpServletRequest request, HttpServletResponse response) {
         String uri = request.getRequestURI();
-        String os = request.getHeader("os");
-        String device = request.getHeader("device");
-        String token = request.getHeader("token");
-        if (StringUtils.isBlank(os)) {
-            writeResponse(response, JsonUtils.toJson(Response.createByInvalidHeader()));
-            return false;
-        }
-        if (str2int(os) != 0 && str2int(os) != 1) {
-            writeResponse(response, JsonUtils.toJson(Response.createByInvalidHeader("无效的操作平台")));
-            return false;
-        }
-        if (StringUtils.isBlank(device)) {
-            writeResponse(response, JsonUtils.toJson(Response.createByInvalidHeader()));
-            return false;
-        }
-        if (!checkTokenWithoutUri(uri)) {
-            if (StringUtils.isBlank(token)) {
+        if (uri.endsWith(".do")) {
+            String os = request.getHeader("os");
+            String device = request.getHeader("device");
+            String token = request.getHeader("token");
+            if (StringUtils.isBlank(os)) {
                 writeResponse(response, JsonUtils.toJson(Response.createByInvalidHeader()));
                 return false;
             }
-            DecodedJWT jwt = JwtUtils.verifyJwt(token);
-            if (jwt == null) {
-                writeResponse(response, JsonUtils.toJson(Response.createByInvalidToken()));
+            if (str2int(os) != 0 && str2int(os) != 1) {
+                writeResponse(response, JsonUtils.toJson(Response.createByInvalidHeader("无效的操作平台")));
                 return false;
-            } else {
-                String tokenUid = userDAO.selectByPrimaryKey(JwtUtils.getLong(token, "id")).getTokenUid();
-                if (!tokenUid.equals(JwtUtils.getString(token, "tokenUid"))) {
+            }
+            if (StringUtils.isBlank(device)) {
+                writeResponse(response, JsonUtils.toJson(Response.createByInvalidHeader()));
+                return false;
+            }
+            if (!checkUriWithoutToken(uri)) {
+                if (StringUtils.isBlank(token)) {
+                    writeResponse(response, JsonUtils.toJson(Response.createByInvalidHeader()));
+                    return false;
+                }
+                DecodedJWT jwt = JwtUtils.verifyJwt(token);
+                if (jwt == null) {
                     writeResponse(response, JsonUtils.toJson(Response.createByInvalidToken()));
+                    return false;
+                } else {
+                    String tokenUid = userDAO.selectByPrimaryKey(JwtUtils.getLong(token, "id")).getTokenUid();
+                    if (!tokenUid.equals(JwtUtils.getString(token, "tokenUid"))) {
+                        writeResponse(response, JsonUtils.toJson(Response.createByInvalidToken()));
+                    }
                 }
             }
         }
@@ -75,10 +84,17 @@ public class HeaderInterceptor implements HandlerInterceptor {
         return -1;
     }
 
-    private boolean checkTokenWithoutUri(String url) {
-        return "/user/login.do".equals(url) ||
-                "/user/add.do".equals(url) ||
-                "/article/category/list.do".equals(url);
+    private boolean checkUriWithoutToken(String url) {
+        return "/user/login.do".equals(url)
+                || "/user/add.do".equals(url)
+                || "/article/category/list.do".equals(url);
+    }
+
+    private boolean checkUriWithoutHeader(String url) {
+        return "/swagger-ui.html".equals(url)
+                || url.contains("/webjars")
+                || url.contains("/v2/api-docs")
+                || url.contains("/swagger-resources");
     }
 
     private void writeResponse(HttpServletResponse response, String content) {
