@@ -5,6 +5,7 @@ import com.chhd.y.dao.ArticleCategoryDAO;
 import com.chhd.y.dao.ArticleDAO;
 import com.chhd.y.dto.ArticleDTO;
 import com.chhd.y.dto.PageInfoDTO;
+import com.chhd.y.pojo.ArticleCategory;
 import com.chhd.y.pojo.ArticleWithBLOBs;
 import com.chhd.y.service.ArticleService;
 import com.chhd.y.util.PropertiesUtils;
@@ -37,11 +38,20 @@ public class ArticleServiceImpl implements ArticleService {
         }
         article.setCover(article.getCover().replace(imgBaseUrl, imgBaseUrlFlag));
         article.setContent(article.getContent().replace(imgBaseUrl, imgBaseUrlFlag));
-        int row = articleDAO.insert(article);
-        if (row > 0) {
-            return Response.createBySuccess();
+        if (article.getId() == null) {
+            int row = articleDAO.insert(article);
+            if (row > 0) {
+                return Response.createBySuccess();
+            } else {
+                return Response.createByError();
+            }
         } else {
-            return Response.createByError();
+            int row = articleDAO.updateByPrimaryKeySelective(article);
+            if (row > 0) {
+                return Response.createBySuccess();
+            } else {
+                return Response.createByError();
+            }
         }
     }
 
@@ -72,7 +82,13 @@ public class ArticleServiceImpl implements ArticleService {
             article.setContent(article.getContent().replace(imgBaseUrlFlag, imgBaseUrl));
             ArticleDTO articleDTO = new ArticleDTO();
             BeanUtils.copyProperties(article, articleDTO);
-            String categoryName = articleCategoryDAO.selectByPrimaryKey(articleDTO.getCategoryId()).getName();
+            ArticleCategory category = articleCategoryDAO.selectByPrimaryKey(articleDTO.getCategoryId());
+            String categoryName = category.getName();
+            ArticleCategory parent = articleCategoryDAO.selectByPrimaryKey(category.getParentId());
+            if (parent != null) {
+                articleDTO.setParentId(parent.getId());
+                articleDTO.setParentName(parent.getName());
+            }
             articleDTO.setCategoryName(categoryName);
             return Response.createBySuccess(articleDTO);
         } else {
