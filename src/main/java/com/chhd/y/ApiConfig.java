@@ -63,7 +63,7 @@ class ApiConfig extends WebMvcConfigurationSupport {
         return new ApiInfoBuilder()
                 .title("爆炸糖")
                 .description("接口文档，在线测试")
-                .termsOfServiceUrl("http://192.168.1.80:8000/swagger-ui.html")
+//                .termsOfServiceUrl("http://192.168.1.80:8000/swagger-ui.html")
                 .version("1.0")
                 .build();
     }
