@@ -24,5 +24,7 @@ public interface UserService extends Constant {
 
     Response unbindEmail(Long id);
 
-    Response list(int pageNum,int pageSize);
+    Response list(int pageNum, int pageSize);
+
+    Response disable(Long userId, int disable);
 }

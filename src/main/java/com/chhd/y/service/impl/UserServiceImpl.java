@@ -222,12 +222,41 @@ public class UserServiceImpl implements UserService {
         for (User user : userList) {
             UserDTO userDTO = new UserDTO();
             BeanUtils.copyProperties(user, userDTO);
+            userDTO.setRoleName(getRoleName(userDTO.getRole()));
             userDTOList.add(userDTO);
         }
         PageInfo<UserDTO> pageInfo = new PageInfo<>(userDTOList);
         PageInfoDTO pageInfoDTO = new PageInfoDTO();
         BeanUtils.copyProperties(pageInfo, pageInfoDTO);
         return Response.createBySuccess(pageInfoDTO);
+    }
+
+    private String getRoleName(int role) {
+        if (role == 0) {
+            return "超级管理员";
+        } else if (role == 1) {
+            return "管理员";
+        } else if (role == 10) {
+            return "超级用户";
+        } else if (role == 11) {
+            return "用户";
+        }
+        return "未知";
+    }
+
+    @Override
+    public Response disable(Long userId, int disable) {
+        User user = userDAO.selectByPrimaryKey(userId);
+        if (user == null) {
+            return Response.createByError("找不到用户");
+        }
+        user.setDisable(disable);
+        int row = userDAO.updateByPrimaryKeySelective(user);
+        if (row > 0) {
+            return Response.createBySuccess();
+        } else {
+            return Response.createByError();
+        }
     }
 
     private Response checkModifyPwdData(Long id, String password, String newPassword) {

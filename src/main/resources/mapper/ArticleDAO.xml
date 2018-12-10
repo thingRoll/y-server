@@ -1,193 +1,224 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.chhd.y.dao.ArticleDAO">
-    <resultMap id="BaseResultMap" type="com.chhd.y.pojo.Article">
-        <id column="id" jdbcType="BIGINT" property="id"/>
-        <result column="cover" jdbcType="VARCHAR" property="cover"/>
-        <result column="title" jdbcType="VARCHAR" property="title"/>
-        <result column="keyword" jdbcType="VARCHAR" property="keyword"/>
-        <result column="category_id" jdbcType="BIGINT" property="categoryId"/>
-        <result column="visit" jdbcType="INTEGER" property="visit"/>
-        <result column="like" jdbcType="INTEGER" property="like"/>
-        <result column="plus" jdbcType="INTEGER" property="plus"/>
-        <result column="disable" jdbcType="INTEGER" property="disable"/>
-        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
-        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
-    </resultMap>
-    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.chhd.y.pojo.ArticleWithBLOBs">
-        <result column="summary" jdbcType="LONGVARCHAR" property="summary"/>
-        <result column="content" jdbcType="LONGVARCHAR" property="content"/>
-        <result column="hide_info" jdbcType="LONGVARCHAR" property="hideInfo"/>
-    </resultMap>
-    <sql id="Base_Column_List">
-    id, cover, title, keyword, category_id, visit, `like`, plus, `disable`, create_time,
-    update_time
+  <resultMap id="BaseResultMap" type="com.chhd.y.pojo.Article">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="cover" jdbcType="VARCHAR" property="cover" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="keyword" jdbcType="VARCHAR" property="keyword" />
+    <result column="category_id" jdbcType="BIGINT" property="categoryId" />
+    <result column="visit" jdbcType="INTEGER" property="visit" />
+    <result column="like" jdbcType="INTEGER" property="like" />
+    <result column="plus" jdbcType="INTEGER" property="plus" />
+    <result column="pan" jdbcType="VARCHAR" property="pan" />
+    <result column="pan_code" jdbcType="VARCHAR" property="panCode" />
+    <result column="disable" jdbcType="INTEGER" property="disable" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.chhd.y.pojo.ArticleWithBLOBs">
+    <result column="summary" jdbcType="LONGVARCHAR" property="summary" />
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+    <result column="hide_info" jdbcType="LONGVARCHAR" property="hideInfo" />
+    <result column="magnet" jdbcType="LONGVARCHAR" property="magnet" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, cover, title, keyword, category_id, visit, `like`, plus, pan, pan_code, `disable`, 
+    create_time, update_time
   </sql>
-    <sql id="Blob_Column_List">
-    summary, content, hide_info
+  <sql id="Blob_Column_List">
+    summary, content, hide_info, magnet
   </sql>
-    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
-        select
-        <include refid="Base_Column_List"/>
-        ,
-        <include refid="Blob_Column_List"/>
-        from article
-        where id = #{id,jdbcType=BIGINT}
-    </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from article
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from article
     where id = #{id,jdbcType=BIGINT}
   </delete>
-    <insert id="insert" parameterType="com.chhd.y.pojo.ArticleWithBLOBs" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insert" parameterType="com.chhd.y.pojo.ArticleWithBLOBs" useGeneratedKeys="true" keyProperty="id">
     insert into article (id, cover, title, 
       keyword, category_id, visit, 
-      `like`, plus, `disable`,
-      create_time, update_time, summary, 
-      content, hide_info)
+      `like`, plus, pan, pan_code, 
+      `disable`, create_time, update_time, 
+      summary, content, hide_info, 
+      magnet)
     values (#{id,jdbcType=BIGINT}, #{cover,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
-      #{keyword,jdbcType=VARCHAR}, #{categoryId,jdbcType=BIGINT}, 0,
-      0, 0, 0,
-      now(), now(), #{summary,jdbcType=LONGVARCHAR},
-      #{content,jdbcType=LONGVARCHAR}, #{hideInfo,jdbcType=LONGVARCHAR})
+      #{keyword,jdbcType=VARCHAR}, #{categoryId,jdbcType=BIGINT}, #{visit,jdbcType=INTEGER}, 
+      #{like,jdbcType=INTEGER}, #{plus,jdbcType=INTEGER}, #{pan,jdbcType=VARCHAR}, #{panCode,jdbcType=VARCHAR}, 
+      #{disable,jdbcType=INTEGER}, now(), now(),
+      #{summary,jdbcType=LONGVARCHAR}, #{content,jdbcType=LONGVARCHAR}, #{hideInfo,jdbcType=LONGVARCHAR}, 
+      #{magnet,jdbcType=LONGVARCHAR})
   </insert>
-    <insert id="insertSelective" parameterType="com.chhd.y.pojo.ArticleWithBLOBs" useGeneratedKeys="true"
-            keyProperty="id">
-        insert into article
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                id,
-            </if>
-            <if test="cover != null">
-                cover,
-            </if>
-            <if test="title != null">
-                title,
-            </if>
-            <if test="keyword != null">
-                keyword,
-            </if>
-            <if test="categoryId != null">
-                category_id,
-            </if>
-            <if test="visit != null">
-                visit,
-            </if>
-            <if test="like != null">
-                `like`,
-            </if>
-            <if test="plus != null">
-                plus,
-            </if>
-            <if test="disable != null">
-                `disable`,
-            </if>
-            <if test="createTime != null">
-                create_time,
-            </if>
-            <if test="updateTime != null">
-                update_time,
-            </if>
-            <if test="summary != null">
-                summary,
-            </if>
-            <if test="content != null">
-                content,
-            </if>
-            <if test="hideInfo != null">
-                hide_info,
-            </if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                #{id,jdbcType=BIGINT},
-            </if>
-            <if test="cover != null">
-                #{cover,jdbcType=VARCHAR},
-            </if>
-            <if test="title != null">
-                #{title,jdbcType=VARCHAR},
-            </if>
-            <if test="keyword != null">
-                #{keyword,jdbcType=VARCHAR},
-            </if>
-            <if test="categoryId != null">
-                #{categoryId,jdbcType=BIGINT},
-            </if>
-            <if test="visit != null">
-                0,
-            </if>
-            <if test="like != null">
-                0,
-            </if>
-            <if test="plus != null">
-                0,
-            </if>
-            <if test="disable != null">
-                0,
-            </if>
-            <if test="createTime != null">
-                now(),
-            </if>
-            <if test="updateTime != null">
-                now(),
-            </if>
-            <if test="summary != null">
-                #{summary,jdbcType=LONGVARCHAR},
-            </if>
-            <if test="content != null">
-                #{content,jdbcType=LONGVARCHAR},
-            </if>
-            <if test="hideInfo != null">
-                #{hideInfo,jdbcType=LONGVARCHAR},
-            </if>
-        </trim>
-    </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.chhd.y.pojo.ArticleWithBLOBs">
-        update article
-        <set>
-            <if test="cover != null">
-                cover = #{cover,jdbcType=VARCHAR},
-            </if>
-            <if test="title != null">
-                title = #{title,jdbcType=VARCHAR},
-            </if>
-            <if test="keyword != null">
-                keyword = #{keyword,jdbcType=VARCHAR},
-            </if>
-            <if test="categoryId != null">
-                category_id = #{categoryId,jdbcType=BIGINT},
-            </if>
-            <if test="visit != null">
-                visit = #{visit,jdbcType=INTEGER},
-            </if>
-            <if test="like != null">
-                `like` = #{like,jdbcType=INTEGER},
-            </if>
-            <if test="plus != null">
-                plus = #{plus,jdbcType=INTEGER},
-            </if>
-            <if test="disable != null">
-                `disable` = #{disable,jdbcType=INTEGER},
-            </if>
-            <if test="createTime != null">
-                create_time = #{createTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="updateTime != null">
-                update_time = now(),
-            </if>
-            <if test="summary != null">
-                summary = #{summary,jdbcType=LONGVARCHAR},
-            </if>
-            <if test="content != null">
-                content = #{content,jdbcType=LONGVARCHAR},
-            </if>
-            <if test="hideInfo != null">
-                hide_info = #{hideInfo,jdbcType=LONGVARCHAR},
-            </if>
-        </set>
-        where id = #{id,jdbcType=BIGINT}
-    </update>
-    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.chhd.y.pojo.ArticleWithBLOBs">
+  <insert id="insertSelective" parameterType="com.chhd.y.pojo.ArticleWithBLOBs" useGeneratedKeys="true" keyProperty="id">
+    insert into article
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="cover != null">
+        cover,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="keyword != null">
+        keyword,
+      </if>
+      <if test="categoryId != null">
+        category_id,
+      </if>
+      <if test="visit != null">
+        visit,
+      </if>
+      <if test="like != null">
+        `like`,
+      </if>
+      <if test="plus != null">
+        plus,
+      </if>
+      <if test="pan != null">
+        pan,
+      </if>
+      <if test="panCode != null">
+        pan_code,
+      </if>
+      <if test="disable != null">
+        `disable`,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="summary != null">
+        summary,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="hideInfo != null">
+        hide_info,
+      </if>
+      <if test="magnet != null">
+        magnet,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="cover != null">
+        #{cover,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="keyword != null">
+        #{keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryId != null">
+        #{categoryId,jdbcType=BIGINT},
+      </if>
+      <if test="visit != null">
+        #{visit,jdbcType=INTEGER},
+      </if>
+      <if test="like != null">
+        #{like,jdbcType=INTEGER},
+      </if>
+      <if test="plus != null">
+        #{plus,jdbcType=INTEGER},
+      </if>
+      <if test="pan != null">
+        #{pan,jdbcType=VARCHAR},
+      </if>
+      <if test="panCode != null">
+        #{panCode,jdbcType=VARCHAR},
+      </if>
+      <if test="disable != null">
+        #{disable,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        now(),
+      </if>
+      <if test="updateTime != null">
+        now(),
+      </if>
+      <if test="summary != null">
+        #{summary,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="hideInfo != null">
+        #{hideInfo,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="magnet != null">
+        #{magnet,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chhd.y.pojo.ArticleWithBLOBs">
+    update article
+    <set>
+      <if test="cover != null">
+        cover = #{cover,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="keyword != null">
+        keyword = #{keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryId != null">
+        category_id = #{categoryId,jdbcType=BIGINT},
+      </if>
+      <if test="visit != null">
+        visit = #{visit,jdbcType=INTEGER},
+      </if>
+      <if test="like != null">
+        `like` = #{like,jdbcType=INTEGER},
+      </if>
+      <if test="plus != null">
+        plus = #{plus,jdbcType=INTEGER},
+      </if>
+      <if test="pan != null">
+        pan = #{pan,jdbcType=VARCHAR},
+      </if>
+      <if test="panCode != null">
+        pan_code = #{panCode,jdbcType=VARCHAR},
+      </if>
+      <if test="disable != null">
+        `disable` = #{disable,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = now(),
+      </if>
+      <if test="summary != null">
+        summary = #{summary,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="hideInfo != null">
+        hide_info = #{hideInfo,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="magnet != null">
+        magnet = #{magnet,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.chhd.y.pojo.ArticleWithBLOBs">
     update article
     set cover = #{cover,jdbcType=VARCHAR},
       title = #{title,jdbcType=VARCHAR},
@@ -196,15 +227,18 @@
       visit = #{visit,jdbcType=INTEGER},
       `like` = #{like,jdbcType=INTEGER},
       plus = #{plus,jdbcType=INTEGER},
+      pan = #{pan,jdbcType=VARCHAR},
+      pan_code = #{panCode,jdbcType=VARCHAR},
       `disable` = #{disable,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = now(),
       summary = #{summary,jdbcType=LONGVARCHAR},
       content = #{content,jdbcType=LONGVARCHAR},
-      hide_info = #{hideInfo,jdbcType=LONGVARCHAR}
+      hide_info = #{hideInfo,jdbcType=LONGVARCHAR},
+      magnet = #{magnet,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-    <update id="updateByPrimaryKey" parameterType="com.chhd.y.pojo.Article">
+  <update id="updateByPrimaryKey" parameterType="com.chhd.y.pojo.Article">
     update article
     set cover = #{cover,jdbcType=VARCHAR},
       title = #{title,jdbcType=VARCHAR},
@@ -213,23 +247,25 @@
       visit = #{visit,jdbcType=INTEGER},
       `like` = #{like,jdbcType=INTEGER},
       plus = #{plus,jdbcType=INTEGER},
+      pan = #{pan,jdbcType=VARCHAR},
+      pan_code = #{panCode,jdbcType=VARCHAR},
       `disable` = #{disable,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = now(),
+      update_time = now()
     where id = #{id,jdbcType=BIGINT}
   </update>
 
-    <!-- 自定义方法 -->
-    <select id="selectCount" resultType="int" parameterType="long">
+  <!-- 自定义方法 -->
+  <select id="selectCount" resultType="int" parameterType="long">
     SELECT count(*) FROM article
     WHERE category_id =#{categoryId}
   </select>
-    
-    <select id="selectAll" resultMap="ResultMapWithBLOBs">
-        select
-        <include refid="Base_Column_List"/>
-        ,
-        <include refid="Blob_Column_List"/>
-        from article
-    </select>
+
+  <select id="selectAll" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List"/>
+    ,
+    <include refid="Blob_Column_List"/>
+    from article
+  </select>
 </mapper>

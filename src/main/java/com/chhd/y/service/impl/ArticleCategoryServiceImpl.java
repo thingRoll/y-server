@@ -30,12 +30,7 @@ public class ArticleCategoryServiceImpl implements ArticleCategoryService {
     @Override
     public Response list(Long userId, Long parentId) {
         User user = userDAO.selectByPrimaryKey(userId);
-        int plus;
-        if (user == null || user.getRole() == 1) {
-            plus = 0;
-        } else {
-            plus = 1;
-        }
+        int plus = 1;
         List<ArticleCategory> articleCategoryList = categoryDAO.selectArticleCategoryByParentIdPlus(parentId, plus);
         if (articleCategoryList != null) {
             return Response.createBySuccess(createArticleCategoryDTOList(parentId, plus));
@@ -55,7 +50,7 @@ public class ArticleCategoryServiceImpl implements ArticleCategoryService {
         for (ArticleCategory articleCategory : articleCategoryList) {
             ArticleCategoryDTO dto = new ArticleCategoryDTO();
             BeanUtils.copyProperties(articleCategory, dto);
-//            dto.setIcon(null);
+            dto.setIcon(null);
             dto.setNum(articleDAO.selectCount(articleCategory.getId()));
             List<ArticleCategoryDTO> childList = createArticleCategoryDTOList(articleCategory.getId(), plus);
             if (!childList.isEmpty()) {

@@ -85,16 +85,9 @@ public class HeaderInterceptor implements HandlerInterceptor {
     }
 
     private boolean checkUriWithoutToken(String url) {
-        return "/user/login.do".equals(url)
-                || "/user/add.do".equals(url)
-                || "/article/category/list.do".equals(url);
-    }
-
-    private boolean checkUriWithoutHeader(String url) {
-        return "/swagger-ui.html".equals(url)
-                || url.contains("/webjars")
-                || url.contains("/v2/api-docs")
-                || url.contains("/swagger-resources");
+        return url.contains("/user/login.do")
+                || url.contains("/user/add.do")
+                || url.contains("/article/category/list.do");
     }
 
     private void writeResponse(HttpServletResponse response, String content) {

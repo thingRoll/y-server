@@ -41,6 +41,13 @@ public class UserDTO implements Serializable {
      */
     private Integer role;
 
+    private String roleName;
+
+    /**
+     * 状态，0=开启，1=禁用
+     */
+    private Integer disable;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -103,4 +110,19 @@ public class UserDTO implements Serializable {
         this.role = role;
     }
 
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public Integer getDisable() {
+        return disable;
+    }
+
+    public void setDisable(Integer disable) {
+        this.disable = disable;
+    }
 }

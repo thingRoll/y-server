@@ -82,4 +82,10 @@ public class UserController extends BaseController {
                          @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
         return userService.list(pageNum, pageSize);
     }
+
+    @RequestMapping(value = "disable.do", method = RequestMethod.POST)
+    @ResponseBody
+    public Response disable(Long userId, int disable) {
+        return userService.disable(userId, disable);
+    }
 }
