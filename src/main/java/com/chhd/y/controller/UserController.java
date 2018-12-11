@@ -46,6 +46,12 @@ public class UserController extends BaseController {
         return userService.login(account, password, getOs(), getDevice());
     }
 
+    @RequestMapping(value = "admin_login.do", method = RequestMethod.POST)
+    @ResponseBody
+    public Response adminLogin(String account, String password) {
+        return userService.adminLogin(account, password, getOs(), getDevice());
+    }
+
     @RequestMapping(value = "modify_password.do", method = RequestMethod.POST)
     @ResponseBody
     public Response modifyPassword(String password, String newPassword) {
@@ -80,7 +86,7 @@ public class UserController extends BaseController {
     @ResponseBody
     public Response list(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
                          @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
-        return userService.list(pageNum, pageSize);
+        return userService.list(getUserId(), pageNum, pageSize);
     }
 
     @RequestMapping(value = "disable.do", method = RequestMethod.POST)

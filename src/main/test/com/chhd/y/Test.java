@@ -12,7 +12,7 @@ public class Test {
     @org.junit.Test
     public void main() {
         System.out.println("````````````````````````````1");
-        System.out.println("/article/list.do".endsWith(".do"));
+        System.out.println(MD5Utils.encode("superadmin"));
         System.out.println("````````````````````````````2");
     }
 }

@@ -8,6 +8,7 @@ import com.chhd.y.dto.ArticleCategoryDTO;
 import com.chhd.y.pojo.ArticleCategory;
 import com.chhd.y.pojo.User;
 import com.chhd.y.service.ArticleCategoryService;
+import com.chhd.y.util.RoleUtils;
 import com.google.common.collect.Lists;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class ArticleCategoryServiceImpl implements ArticleCategoryService {
     @Override
     public Response list(Long userId, Long parentId) {
         User user = userDAO.selectByPrimaryKey(userId);
-        int plus = 1;
+        int plus = RoleUtils.checkPlus(user);
         List<ArticleCategory> articleCategoryList = categoryDAO.selectArticleCategoryByParentIdPlus(parentId, plus);
         if (articleCategoryList != null) {
             return Response.createBySuccess(createArticleCategoryDTOList(parentId, plus));

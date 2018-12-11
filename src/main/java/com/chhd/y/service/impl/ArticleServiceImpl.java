@@ -3,12 +3,15 @@ package com.chhd.y.service.impl;
 import com.chhd.y.common.Response;
 import com.chhd.y.dao.ArticleCategoryDAO;
 import com.chhd.y.dao.ArticleDAO;
+import com.chhd.y.dao.UserDAO;
 import com.chhd.y.dto.ArticleDTO;
 import com.chhd.y.dto.PageInfoDTO;
 import com.chhd.y.pojo.ArticleCategory;
 import com.chhd.y.pojo.ArticleWithBLOBs;
+import com.chhd.y.pojo.User;
 import com.chhd.y.service.ArticleService;
 import com.chhd.y.util.PropertiesUtils;
+import com.chhd.y.util.RoleUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
@@ -26,6 +29,8 @@ public class ArticleServiceImpl implements ArticleService {
     private static String imgBaseUrl = PropertiesUtils.getProperty("ftp.http.prefix");
 
     @Autowired
+    private UserDAO userDAO;
+    @Autowired
     private ArticleDAO articleDAO;
     @Autowired
     private ArticleCategoryDAO articleCategoryDAO;
@@ -39,6 +44,9 @@ public class ArticleServiceImpl implements ArticleService {
         article.setCover(article.getCover().replace(imgBaseUrl, imgBaseUrlFlag));
         article.setContent(article.getContent().replace(imgBaseUrl, imgBaseUrlFlag));
         if (article.getId() == null) {
+            article.setVisit(0);
+            article.setLike(0);
+            article.setDisable(0);
             int row = articleDAO.insert(article);
             if (row > 0) {
                 return Response.createBySuccess();
@@ -97,9 +105,11 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public Response list(int pageNum, int pageSize) {
+    public Response list(Long userId, int pageNum, int pageSize) {
+        User user = userDAO.selectByPrimaryKey(userId);
+        int plus = RoleUtils.checkPlus(user);
         PageHelper.startPage(pageNum, pageSize);
-        List<ArticleWithBLOBs> articleList = articleDAO.selectAll();
+        List<ArticleWithBLOBs> articleList = articleDAO.selectAllByPlus(plus);
         List<ArticleDTO> articleDTOList = Lists.newArrayList();
         for (ArticleWithBLOBs old : articleList) {
             old.setCover(old.getCover().replace(imgBaseUrlFlag, imgBaseUrl));

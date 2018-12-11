@@ -86,6 +86,7 @@ public class HeaderInterceptor implements HandlerInterceptor {
 
     private boolean checkUriWithoutToken(String url) {
         return url.contains("/user/login.do")
+                || url.contains("/user/admin_login.do")
                 || url.contains("/user/add.do")
                 || url.contains("/article/category/list.do");
     }

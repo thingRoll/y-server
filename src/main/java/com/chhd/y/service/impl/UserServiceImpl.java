@@ -10,6 +10,7 @@ import com.chhd.y.pojo.User;
 import com.chhd.y.service.UserService;
 import com.chhd.y.util.MD5Utils;
 import com.chhd.y.util.MailUtils;
+import com.chhd.y.util.RoleUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
@@ -129,6 +130,17 @@ public class UserServiceImpl implements UserService {
         return Response.createBySuccess(toUserDto(user));
     }
 
+    @Override
+    public Response adminLogin(String account, String password, Integer os, String device) {
+        Response response = login(account, password, os, device);
+        UserDTO userDTO = (UserDTO) response.getData();
+        if (RoleUtils.checkAdmin(userDTO.getRole()) == 1) {
+            return response;
+        } else {
+            return Response.createByError("非管理员账号");
+        }
+    }
+
     private Response checkLoginData(String account, String password) {
         if (StringUtils.isBlank(account)) {
             return Response.createByInvalidArgument("account is null");
@@ -215,9 +227,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Response list(int pageNum, int pageSize) {
+    public Response list(Long userId, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        List<User> userList = userDAO.selectAll();
+        List<User> userList = userDAO.selectAllByRole(userDAO.selectByPrimaryKey(userId).getRole());
         List<UserDTO> userDTOList = Lists.newArrayList();
         for (User user : userList) {
             UserDTO userDTO = new UserDTO();

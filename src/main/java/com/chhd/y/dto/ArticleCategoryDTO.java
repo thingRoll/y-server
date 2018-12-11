@@ -10,45 +10,15 @@ import java.util.List;
 
 public class ArticleCategoryDTO {
 
-    /**
-     * 类别id
-     */
     private Long id;
-
-    /**
-     * 如果父类别id=-1，是根节点，一级类别
-     */
     private Long parentId;
-
-    /**
-     * 名称
-     */
     private String name;
-
-    /**
-     * 排序，根节点优先级最高，越低越前，其次sort，越低越前，其次create_uptime，越新越后
-     */
     private Integer sort;
-
     private Integer plus;
-
-    /**
-     * 状态，0=开启，1=禁用
-     */
     private Integer disable;
-
-    /**
-     * 创建时间
-     */
     private Date createTime;
-
-    /**
-     * base64编码的图标
-     */
     private String icon;
-
     private List<ArticleCategoryDTO> childList;
-
     private int num;
 
     public Long getId() {

@@ -286,5 +286,13 @@
         SELECT
         <include refid="Base_Column_List"/>
         FROM user
+        ORDER BY id DESC
+    </select>
+    <select id="selectAllByRole" resultMap="BaseResultMap" parameterType="int">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM user
+        WHERE `role` &gt; #{role}
+        ORDER BY id DESC
     </select>
 </mapper>

@@ -21,4 +21,6 @@ public interface UserDAO extends MyBatisBaseDao<User, Long> {
     User selectByEmail(String username);
 
     List<User> selectAll();
+
+    List<User> selectAllByRole(int role);
 }

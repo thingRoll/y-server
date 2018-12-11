@@ -4,76 +4,25 @@ import java.util.Date;
 
 public class ArticleDTO {
 
-    /**
-     * 文章id
-     */
     private Long id;
-
-    /**
-     * 封面
-     */
     private String cover;
-
-    /**
-     * 标题
-     */
     private String title;
-
-    /**
-     * 关键字，英文逗号“,”分割
-     */
     private String keyword;
-
     private Long parentId;
     private String parentName;
-
-    /**
-     * 分类id
-     */
     private Long categoryId;
-
     private String categoryName;
-
-    /**
-     * 浏览量
-     */
     private Integer visit;
-
-    /**
-     * 点赞量
-     */
     private Integer like;
-
     private Integer plus;
-
-    /**
-     * 状态，0=开启，1=禁用
-     */
+    private String pan;
+    private String panCode;
+    private String magnet;
     private Integer disable;
-
-    /**
-     * 创建时间
-     */
     private Date createTime;
-
-    /**
-     * 更新时间
-     */
     private Date updateTime;
-
-    /**
-     * 概述
-     */
     private String summary;
-
-    /**
-     * 内容
-     */
     private String content;
-
-    /**
-     * 隐藏信息
-     */
     private String hideInfo;
 
     public Long getId() {
@@ -162,6 +111,30 @@ public class ArticleDTO {
 
     public void setPlus(Integer plus) {
         this.plus = plus;
+    }
+
+    public String getPan() {
+        return pan;
+    }
+
+    public void setPan(String pan) {
+        this.pan = pan;
+    }
+
+    public String getPanCode() {
+        return panCode;
+    }
+
+    public void setPanCode(String panCode) {
+        this.panCode = panCode;
+    }
+
+    public String getMagnet() {
+        return magnet;
+    }
+
+    public void setMagnet(String magnet) {
+        this.magnet = magnet;
     }
 
     public Integer getDisable() {

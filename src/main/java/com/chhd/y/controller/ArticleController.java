@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Api(tags = "文章模块")
 @RequestMapping("/article/")
 @Controller
-public class ArticleController {
+public class ArticleController extends BaseController {
 
     @Autowired
     private ArticleService articleService;
@@ -38,7 +38,7 @@ public class ArticleController {
                          @ApiParam(value = "页码") int pageNum,
                          @RequestParam(value = "pageSize", defaultValue = "10")
                          @ApiParam(value = "分页") int pageSize) {
-        return articleService.list(pageNum, pageSize);
+        return articleService.list(getUserId(), pageNum, pageSize);
     }
 
     @RequestMapping(value = "disable.do", method = RequestMethod.POST)

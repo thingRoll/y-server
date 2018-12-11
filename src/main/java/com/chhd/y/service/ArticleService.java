@@ -10,7 +10,7 @@ public interface ArticleService {
 
     Response detail(Long id);
 
-    Response list(int pageNum, int pageSize);
+    Response list(Long userId, int pageNum, int pageSize);
 
     Response disable(long id, int disable);
 }

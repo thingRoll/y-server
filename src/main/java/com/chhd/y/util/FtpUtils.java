@@ -14,6 +14,7 @@ public class FtpUtils {
     private static String ftpPort = PropertiesUtils.getProperty("ftp.port");
     private static String ftpUser = PropertiesUtils.getProperty("ftp.user");
     private static String ftpPass = PropertiesUtils.getProperty("ftp.pass");
+    private static String ftpPath = PropertiesUtils.getProperty("ftp.path");
 
     private FtpUtils() {
     }
@@ -32,7 +33,7 @@ public class FtpUtils {
             client.setControlEncoding("UTF-8");
             client.setFileType(FTPClient.BINARY_FILE_TYPE);
             client.enterLocalPassiveMode();
-            client.changeWorkingDirectory("/y");
+            client.changeWorkingDirectory(ftpPath);
             for (File fileItem : fileList) {
                 fis = new FileInputStream(fileItem);
                 client.storeFile(fileItem.getName(), fis);

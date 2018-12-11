@@ -6,48 +6,16 @@ import java.io.Serializable;
 
 public class UserDTO implements Serializable {
 
-    /**
-     * 用户id
-     */
+
     private Long id;
-
-    /**
-     * 用户名
-     */
     private String username;
-
-    /**
-     * 身份验证
-     */
     private String token;
-
-    /**
-     * 头像
-     */
     private String icon;
-
-    /**
-     * 手机号码
-     */
     private Long tel;
-
-    /**
-     * 邮箱
-     */
     private String email;
-
-    /**
-     * 用户角色，0=管理员，1=普通用户
-     */
     private Integer role;
-
     private String roleName;
-
-    /**
-     * 状态，0=开启，1=禁用
-     */
     private Integer disable;
-
     private static final long serialVersionUID = 1L;
 
     public Long getId() {

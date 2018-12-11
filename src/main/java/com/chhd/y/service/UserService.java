@@ -14,6 +14,8 @@ public interface UserService extends Constant {
 
     Response login(String account, String password, Integer os, String device);
 
+    Response adminLogin(String account, String password, Integer os, String device);
+
     Response modifyPassword(Long id, String password, String newPassword);
 
     Response logout(Long id);
@@ -24,7 +26,7 @@ public interface UserService extends Constant {
 
     Response unbindEmail(Long id);
 
-    Response list(int pageNum, int pageSize);
+    Response list(Long userId, int pageNum, int pageSize);
 
     Response disable(Long userId, int disable);
 }
