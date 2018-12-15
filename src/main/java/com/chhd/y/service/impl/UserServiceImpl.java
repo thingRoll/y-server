@@ -133,12 +133,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public Response adminLogin(String account, String password, Integer os, String device) {
         Response response = login(account, password, os, device);
-        UserDTO userDTO = (UserDTO) response.getData();
-        if (RoleUtils.checkAdmin(userDTO.getRole()) == 1) {
-            return response;
-        } else {
-            return Response.createByError("非管理员账号");
+        if (response.isSuccess()) {
+            UserDTO userDTO = (UserDTO) response.getData();
+            if (RoleUtils.checkAdmin(userDTO.getRole()) == 1) {
+                return response;
+            } else {
+                return Response.createByError("非管理员账号");
+            }
         }
+        return response;
     }
 
     private Response checkLoginData(String account, String password) {

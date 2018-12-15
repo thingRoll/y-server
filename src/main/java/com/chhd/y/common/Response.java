@@ -77,4 +77,8 @@ public class Response<T> {
     public static Response createByInvalidToken() {
         return new Response(ResponseCode.INVALID_TOKEN.getCode(), ResponseCode.INVALID_TOKEN.getDesc());
     }
+
+    public static Response createByInvalidPermission() {
+        return new Response(ResponseCode.INVALID_PERMISSION.getCode(), ResponseCode.INVALID_PERMISSION.getDesc());
+    }
 }

@@ -3,7 +3,10 @@ package com.chhd.y.controller;
 import com.chhd.y.common.Response;
 import com.chhd.y.pojo.ArticleWithBLOBs;
 import com.chhd.y.service.ArticleService;
-import io.swagger.annotations.*;
+import com.chhd.y.util.RoleUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +25,9 @@ public class ArticleController extends BaseController {
     @RequestMapping(value = "add.do", method = RequestMethod.POST)
     @ResponseBody
     public Response add(ArticleWithBLOBs article) {
+        if (!RoleUtils.checkPermission(getUser())) {
+            return Response.createByInvalidPermission();
+        }
         return articleService.add(article);
     }
 
@@ -44,6 +50,16 @@ public class ArticleController extends BaseController {
     @RequestMapping(value = "disable.do", method = RequestMethod.POST)
     @ResponseBody
     public Response disable(long id, int disable) {
+        if (!RoleUtils.checkPermission(getUser())) {
+            return Response.createByInvalidPermission();
+        }
         return articleService.disable(id, disable);
+    }
+
+    @RequestMapping(value = "visit.do", method = RequestMethod.POST)
+    @ResponseBody
+    public Response visit(Long id) {
+        Long userId = getUserId();
+        return articleService.visit(userId, id, getOs(), getDevice());
     }
 }

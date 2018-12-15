@@ -3,6 +3,7 @@ package com.chhd.y.controller;
 import com.chhd.y.common.Response;
 import com.chhd.y.pojo.User;
 import com.chhd.y.service.UserService;
+import com.chhd.y.util.RoleUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,6 +93,9 @@ public class UserController extends BaseController {
     @RequestMapping(value = "disable.do", method = RequestMethod.POST)
     @ResponseBody
     public Response disable(Long userId, int disable) {
+        if (!RoleUtils.checkPermission(getUser())) {
+            return Response.createByInvalidPermission();
+        }
         return userService.disable(userId, disable);
     }
 }

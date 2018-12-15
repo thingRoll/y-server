@@ -29,12 +29,12 @@ public class ArticleCategoryServiceImpl implements ArticleCategoryService {
     private ArticleDAO articleDAO;
 
     @Override
-    public Response list(Long userId, Long parentId) {
+    public Response list(Long userId, Long parentId, int icon) {
         User user = userDAO.selectByPrimaryKey(userId);
         int plus = RoleUtils.checkPlus(user);
         List<ArticleCategory> articleCategoryList = categoryDAO.selectArticleCategoryByParentIdPlus(parentId, plus);
         if (articleCategoryList != null) {
-            return Response.createBySuccess(createArticleCategoryDTOList(parentId, plus));
+            return Response.createBySuccess(createArticleCategoryDTOList(parentId, plus, icon));
         } else {
             return Response.createByError();
         }
@@ -42,7 +42,8 @@ public class ArticleCategoryServiceImpl implements ArticleCategoryService {
 
     private List<ArticleCategoryDTO> createArticleCategoryDTOList(
             Long parentId,
-            int plus) {
+            int plus,
+            int icon) {
         List<ArticleCategoryDTO> dtoList = Lists.newArrayList();
         List<ArticleCategory> articleCategoryList = categoryDAO.selectArticleCategoryByParentIdPlus(parentId, plus);
         if (articleCategoryList.isEmpty()) {
@@ -51,9 +52,10 @@ public class ArticleCategoryServiceImpl implements ArticleCategoryService {
         for (ArticleCategory articleCategory : articleCategoryList) {
             ArticleCategoryDTO dto = new ArticleCategoryDTO();
             BeanUtils.copyProperties(articleCategory, dto);
-            dto.setIcon(null);
+            if (icon == 0)
+                dto.setIcon(null);
             dto.setNum(articleDAO.selectCount(articleCategory.getId()));
-            List<ArticleCategoryDTO> childList = createArticleCategoryDTOList(articleCategory.getId(), plus);
+            List<ArticleCategoryDTO> childList = createArticleCategoryDTOList(articleCategory.getId(), plus, icon);
             if (!childList.isEmpty()) {
                 dto.setChildList(childList);
             }

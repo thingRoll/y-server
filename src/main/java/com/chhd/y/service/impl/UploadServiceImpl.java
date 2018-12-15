@@ -49,19 +49,26 @@ public class UploadServiceImpl implements UploadService {
                 // transferTo()，是SpringMVC封装的方法，用于图片上传时，从内存写入磁盘
                 multipartFile.transferTo(cacheFile);
 
-                Thumbnails.of(cacheFile.getAbsolutePath())
-                        .scale(1f)
-                        .outputQuality(0.5f)
-                        .toFile(compressCacheFile.getAbsolutePath());
+                File outFile;
+                if (checkPictureCanCompress(extensionName)) {
+                    Thumbnails.of(cacheFile.getAbsolutePath())
+                            .scale(1f)
+                            .outputQuality(0.5f)
+                            .toFile(compressCacheFile.getAbsolutePath());
 
-                boolean b = cacheFile.delete();
-                isSuccess = FtpUtils.uploadFile(Lists.newArrayList(compressCacheFile));
-                b = compressCacheFile.delete();
+                    boolean b = cacheFile.delete();
+                    outFile = compressCacheFile;
+                } else {
+                    outFile = cacheFile;
+                }
+
+                isSuccess = FtpUtils.uploadFile(Lists.newArrayList(outFile));
+                boolean b = outFile.delete();
 
                 String ftpHttpPrefix = PropertiesUtils.getProperty("ftp.http.prefix");
                 Map<String, String> fileMap = Maps.newHashMap();
                 fileMap.put("filename", originalFilename);
-                fileMap.put("url", ftpHttpPrefix + compressCacheFile.getName());
+                fileMap.put("url", ftpHttpPrefix + outFile.getName());
                 fileList.add(fileMap);
             } catch (Exception e) {
                 isSuccess = false;
@@ -72,5 +79,31 @@ public class UploadServiceImpl implements UploadService {
             }
         }
         return Response.createBySuccess(fileList);
+    }
+
+    private boolean checkPicture(String extensionName) {
+        extensionName = extensionName.toLowerCase();
+        String[] ary = new String[]{"bmp", "gif", "jpg", "jpg", "jpeg", "jpe", "png", "gif"};
+        for (String s : ary) {
+            if (s.equals(extensionName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkPictureCanCompress(String extensionName) {
+        extensionName = extensionName.toLowerCase();
+        if (checkPicture(extensionName)) {
+            String[] ary = new String[]{"gif"};
+            for (String s : ary) {
+                if (s.equals(extensionName)) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 }

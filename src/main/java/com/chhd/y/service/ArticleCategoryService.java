@@ -5,7 +5,7 @@ import com.chhd.y.pojo.ArticleCategory;
 
 public interface ArticleCategoryService {
 
-    Response list(Long userId, Long parentId);
+    Response list(Long userId, Long parentId, int icon);
 
     Response disable(Long categoryId, int disable);
 }

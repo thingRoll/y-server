@@ -3,10 +3,12 @@ package com.chhd.y.service.impl;
 import com.chhd.y.common.Response;
 import com.chhd.y.dao.ArticleCategoryDAO;
 import com.chhd.y.dao.ArticleDAO;
+import com.chhd.y.dao.ArticleVisitDAO;
 import com.chhd.y.dao.UserDAO;
 import com.chhd.y.dto.ArticleDTO;
 import com.chhd.y.dto.PageInfoDTO;
 import com.chhd.y.pojo.ArticleCategory;
+import com.chhd.y.pojo.ArticleVisit;
 import com.chhd.y.pojo.ArticleWithBLOBs;
 import com.chhd.y.pojo.User;
 import com.chhd.y.service.ArticleService;
@@ -34,6 +36,8 @@ public class ArticleServiceImpl implements ArticleService {
     private ArticleDAO articleDAO;
     @Autowired
     private ArticleCategoryDAO articleCategoryDAO;
+    @Autowired
+    private ArticleVisitDAO articleVisitDAO;
 
     @Override
     public Response add(ArticleWithBLOBs article) {
@@ -139,5 +143,27 @@ public class ArticleServiceImpl implements ArticleService {
         } else {
             return Response.createByError();
         }
+    }
+
+    @Override
+    public Response visit(Long userId, long articleId, int os, String device) {
+        ArticleWithBLOBs article = articleDAO.selectByPrimaryKey(articleId);
+        article.setVisit(article.getVisit() + 1);
+        articleDAO.updateByPrimaryKeySelective(article);
+        ArticleVisit articleVisit = new ArticleVisit();
+        articleVisit.setArticleId(articleId);
+        articleVisit.setArticleTitle(article.getTitle());
+        if (userId != null) {
+            User user = userDAO.selectByPrimaryKey(userId);
+            articleVisit.setUserId(userId);
+            articleVisit.setUsername(user.getUsername());
+        }
+        articleVisit.setOs(os);
+        articleVisit.setDevice(device);
+        int row = articleVisitDAO.insert(articleVisit);
+        if (row > 0) {
+            return Response.createBySuccess();
+        }
+        return Response.createByError();
     }
 }

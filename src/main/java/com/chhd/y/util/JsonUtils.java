@@ -38,4 +38,12 @@ public class JsonUtils {
     public static String toJson(Object obj) {
         return new Gson().toJson(obj);
     }
+
+    public static <T> T copy(Object from, Class<T> clazz) {
+        return parse(JsonUtils.toJson(from), clazz);
+    }
+
+    public static <T> List<T> copyList(Object from, Class<T> clazz) {
+        return parseList(JsonUtils.toJson(from), clazz);
+    }
 }

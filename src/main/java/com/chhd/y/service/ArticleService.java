@@ -13,4 +13,6 @@ public interface ArticleService {
     Response list(Long userId, int pageNum, int pageSize);
 
     Response disable(long id, int disable);
+
+    Response visit(Long userId, long articleId,int os ,String device);
 }
