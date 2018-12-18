@@ -12,6 +12,7 @@ import com.chhd.y.pojo.ArticleVisit;
 import com.chhd.y.pojo.ArticleWithBLOBs;
 import com.chhd.y.pojo.User;
 import com.chhd.y.service.ArticleService;
+import com.chhd.y.util.LogUtils;
 import com.chhd.y.util.PropertiesUtils;
 import com.chhd.y.util.RoleUtils;
 import com.github.pagehelper.PageHelper;
@@ -22,7 +23,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service("ArticleService")
 public class ArticleServiceImpl implements ArticleService {
@@ -109,11 +112,14 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public Response list(Long userId, int pageNum, int pageSize) {
+    public Response list(Long userId, int pageNum, int pageSize, Long categoryId) {
         User user = userDAO.selectByPrimaryKey(userId);
         int plus = RoleUtils.checkPlus(user);
         PageHelper.startPage(pageNum, pageSize);
-        List<ArticleWithBLOBs> articleList = articleDAO.selectAllByPlus(plus);
+        Map<String, String> map = new HashMap<>();
+        map.put("plus", "" + plus);
+        map.put("categoryId", "" + categoryId);
+        List<ArticleWithBLOBs> articleList = articleDAO.selectAllByParams(map);
         List<ArticleDTO> articleDTOList = Lists.newArrayList();
         for (ArticleWithBLOBs old : articleList) {
             old.setCover(old.getCover().replace(imgBaseUrlFlag, imgBaseUrl));

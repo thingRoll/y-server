@@ -10,9 +10,9 @@ public interface ArticleService {
 
     Response detail(Long id);
 
-    Response list(Long userId, int pageNum, int pageSize);
+    Response list(Long userId, int pageNum, int pageSize, Long categoryId);
 
     Response disable(long id, int disable);
 
-    Response visit(Long userId, long articleId,int os ,String device);
+    Response visit(Long userId, long articleId, int os, String device);
 }

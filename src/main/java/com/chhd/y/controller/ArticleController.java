@@ -43,8 +43,9 @@ public class ArticleController extends BaseController {
     public Response list(@RequestParam(value = "pageNum", defaultValue = "1")
                          @ApiParam(value = "页码") int pageNum,
                          @RequestParam(value = "pageSize", defaultValue = "10")
-                         @ApiParam(value = "分页") int pageSize) {
-        return articleService.list(getUserId(), pageNum, pageSize);
+                         @ApiParam(value = "分页") int pageSize,
+                         Long categoryId) {
+        return articleService.list(getUserId(), pageNum, pageSize, categoryId);
     }
 
     @RequestMapping(value = "disable.do", method = RequestMethod.POST)

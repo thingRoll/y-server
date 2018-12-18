@@ -279,4 +279,30 @@
         WHERE plus &lt;= #{plus}
         ORDER BY id DESC
     </select>
+
+    <select id="selectAllByParams" resultMap="ResultMapWithBLOBs" parameterType="map">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from article
+        WHERE plus &lt;= #{plus}
+        <choose>
+            <when test='categoryId != null and categoryId != "" and categoryId != "null"'>
+                and category_id = #{categoryId}
+            </when>
+        </choose>
+        ORDER BY id DESC
+    </select>
+
+    <select id="selectAllByPlusCategoryId" resultMap="ResultMapWithBLOBs" parameterType="map">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from article
+        WHERE plus &lt;= #{plus}
+        and category_id = #{categoryId}
+        ORDER BY id DESC
+    </select>
 </mapper>
