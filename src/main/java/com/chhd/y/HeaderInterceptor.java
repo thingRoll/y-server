@@ -91,6 +91,7 @@ public class HeaderInterceptor implements HandlerInterceptor {
                 || url.contains("/article/category/list.do")
                 || url.contains("/article/list.do")
                 || url.contains("/article/detail.do")
+                || url.contains("/article/visit.do")
                 || url.startsWith("/home");
     }
 

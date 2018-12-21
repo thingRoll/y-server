@@ -37,7 +37,7 @@ public class BaseController {
         } catch (Exception ignored) {
 
         }
-        return -1L;
+        return null;
     }
 
     public User getUser() {

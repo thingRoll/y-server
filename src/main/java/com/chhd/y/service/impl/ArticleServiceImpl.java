@@ -112,11 +112,10 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public Response list(Long userId, int pageNum, int pageSize, Long categoryId) {
+    public Response list(Long userId, int pageNum, int pageSize, Long categoryId, Map<String, String> map) {
         User user = userDAO.selectByPrimaryKey(userId);
         int plus = RoleUtils.checkPlus(user);
         PageHelper.startPage(pageNum, pageSize);
-        Map<String, String> map = new HashMap<>();
         map.put("plus", "" + plus);
         map.put("categoryId", "" + categoryId);
         List<ArticleWithBLOBs> articleList = articleDAO.selectAllByParams(map);
@@ -130,7 +129,8 @@ public class ArticleServiceImpl implements ArticleService {
             articleDTO.setCategoryName(categoryName);
             articleDTOList.add(articleDTO);
         }
-        PageInfo pageInfo = new PageInfo<>(articleDTOList);
+        PageInfo pageInfo = new PageInfo<>(articleList);
+        pageInfo.setList(articleDTOList);
         PageInfoDTO pageInfoDTO = new PageInfoDTO();
         BeanUtils.copyProperties(pageInfo, pageInfoDTO);
         return Response.createBySuccess(pageInfoDTO);

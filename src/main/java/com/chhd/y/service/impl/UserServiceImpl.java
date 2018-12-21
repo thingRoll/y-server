@@ -231,8 +231,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Response list(Long userId, int pageNum, int pageSize) {
+        int role = userDAO.selectByPrimaryKey(userId).getRole();
         PageHelper.startPage(pageNum, pageSize);
-        List<User> userList = userDAO.selectAllByRole(userDAO.selectByPrimaryKey(userId).getRole());
+        List<User> userList = userDAO.selectAllByRole(role);
         List<UserDTO> userDTOList = Lists.newArrayList();
         for (User user : userList) {
             UserDTO userDTO = new UserDTO();
@@ -240,10 +241,11 @@ public class UserServiceImpl implements UserService {
             userDTO.setRoleName(getRoleName(userDTO.getRole()));
             userDTOList.add(userDTO);
         }
-        PageInfo<UserDTO> pageInfo = new PageInfo<>(userDTOList);
+        PageInfo pageInfo = new PageInfo<>(userList);
+        pageInfo.setList(userDTOList);
         PageInfoDTO pageInfoDTO = new PageInfoDTO();
         BeanUtils.copyProperties(pageInfo, pageInfoDTO);
-        return Response.createBySuccess(pageInfoDTO);
+        return Response.createBySuccess(pageInfo);
     }
 
     private String getRoleName(int role) {

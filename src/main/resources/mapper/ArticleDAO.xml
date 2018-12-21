@@ -291,6 +291,9 @@
             <when test='categoryId != null and categoryId != "" and categoryId != "null"'>
                 and category_id = #{categoryId}
             </when>
+            <when test='keyword != null'>
+                and title like "%"#{keyword}"%"
+            </when>
         </choose>
         ORDER BY id DESC
     </select>

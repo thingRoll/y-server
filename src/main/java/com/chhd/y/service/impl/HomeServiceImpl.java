@@ -51,6 +51,7 @@ public class HomeServiceImpl extends BaseService implements HomeService {
             Map<Object, Object> dto = new HashMap<>();
             dto.put("cover", item.getCover().replace(imgBaseUrlFlag, imgBaseUrl));
             dto.put("title", item.getTitle());
+            dto.put("id", item.getId());
             articleDTOList.add(dto);
         }
         return Response.createBySuccess(articleDTOList);
