@@ -5,12 +5,7 @@ import com.chhd.y.pojo.User;
 public class RoleUtils {
 
     public static int checkPlus(User user) {
-        int role = user.getRole();
-        if (role == 0 || role == 10) {
-            return 1;
-        } else {
-            return 0;
-        }
+        return user != null && (user.getRole() == 0 || user.getRole() == 10) ? 1 : 0;
     }
 
     public static int checkAdmin(int role) {

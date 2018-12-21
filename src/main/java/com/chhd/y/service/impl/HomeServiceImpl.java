@@ -93,7 +93,12 @@ public class HomeServiceImpl extends BaseService implements HomeService {
             PageHelper.startPage(1, size);
             List<ArticleWithBLOBs> articleList =
                     articleDao.selectAllByPlusCategoryId(RoleUtils.checkPlus(user), category.getId());
-            group.put("articleList", articleList);
+            for (ArticleWithBLOBs item : articleList) {
+                item.setCover(item.getCover().replace(imgBaseUrlFlag, imgBaseUrl));
+                item.setContent(item.getContent().replace(imgBaseUrlFlag, imgBaseUrl));
+            }
+            List<ArticleDTO> articleDTOList = JsonUtils.copyList(articleList, ArticleDTO.class);
+            group.put("articleList", articleDTOList);
             groupList.add(group);
         }
         return Response.createBySuccess(groupList);

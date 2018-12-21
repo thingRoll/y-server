@@ -88,7 +88,10 @@ public class HeaderInterceptor implements HandlerInterceptor {
         return url.contains("/user/login.do")
                 || url.contains("/user/admin_login.do")
                 || url.contains("/user/add.do")
-                || url.contains("/article/category/list.do");
+                || url.contains("/article/category/list.do")
+                || url.contains("/article/list.do")
+                || url.contains("/article/detail.do")
+                || url.startsWith("/home");
     }
 
     private void writeResponse(HttpServletResponse response, String content) {
