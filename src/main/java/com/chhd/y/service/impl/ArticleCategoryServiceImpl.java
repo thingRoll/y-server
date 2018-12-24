@@ -1,5 +1,6 @@
 package com.chhd.y.service.impl;
 
+import com.chhd.y.common.ArticleCategorySort;
 import com.chhd.y.common.Response;
 import com.chhd.y.dao.ArticleCategoryDAO;
 import com.chhd.y.dao.ArticleDAO;
@@ -49,6 +50,7 @@ public class ArticleCategoryServiceImpl implements ArticleCategoryService {
         if (articleCategoryList.isEmpty()) {
             return dtoList;
         }
+        Collections.sort(articleCategoryList, new ArticleCategorySort());
         for (ArticleCategory articleCategory : articleCategoryList) {
             ArticleCategoryDTO dto = new ArticleCategoryDTO();
             BeanUtils.copyProperties(articleCategory, dto);
@@ -61,22 +63,7 @@ public class ArticleCategoryServiceImpl implements ArticleCategoryService {
             }
             dtoList.add(dto);
         }
-        Collections.sort(dtoList, new DefaultSort());
         return dtoList;
-    }
-
-    private class DefaultSort implements Comparator<ArticleCategoryDTO> {
-
-        @Override
-        public int compare(ArticleCategoryDTO o1, ArticleCategoryDTO o2) {
-            int sortDiff = o1.getSort() - o2.getSort();
-            int timeDiff = (int) (o1.getCreateTime().getTime() - o2.getCreateTime().getTime());
-            if (sortDiff != 0) {
-                return sortDiff;
-            } else {
-                return timeDiff;
-            }
-        }
     }
 
     @Override

@@ -1,16 +1,20 @@
 package com.chhd.y.service.impl;
 
+import com.chhd.y.common.ArticleCategorySort;
 import com.chhd.y.common.Response;
 import com.chhd.y.dao.ArticleCategoryDAO;
 import com.chhd.y.dao.ArticleDAO;
 import com.chhd.y.dao.ArticleVisitDAO;
 import com.chhd.y.dao.UserDAO;
+import com.chhd.y.dto.ArticleCategoryDTO;
 import com.chhd.y.dto.ArticleDTO;
 import com.chhd.y.dto.ArticleVisitDTO;
 import com.chhd.y.pojo.ArticleCategory;
 import com.chhd.y.pojo.ArticleVisit;
 import com.chhd.y.pojo.ArticleWithBLOBs;
 import com.chhd.y.pojo.User;
+import com.chhd.y.service.ArticleCategoryService;
+import com.chhd.y.service.ArticleService;
 import com.chhd.y.service.HomeService;
 import com.chhd.y.util.JsonUtils;
 import com.chhd.y.util.PropertiesUtils;
@@ -22,6 +26,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +45,8 @@ public class HomeServiceImpl extends BaseService implements HomeService {
     private ArticleVisitDAO articleVisitDAO;
     @Autowired
     private ArticleCategoryDAO articleCategoryDAO;
+    @Autowired
+    private ArticleCategoryService articleCategoryService;
 
     @Override
     public Response banner(int size) {
@@ -85,22 +92,24 @@ public class HomeServiceImpl extends BaseService implements HomeService {
     @Override
     public Response groupList(int size) {
         List<Object> groupList = Lists.newArrayList();
-        List<ArticleCategory> categoryList =
-                articleCategoryDAO.selectArticleCategoryByParentIdPlus(-1L, RoleUtils.checkPlus(getUser()));
-        for (ArticleCategory category : categoryList) {
-            Map<Object, Object> group = new HashMap<>();
-            group.put("title", category.getName());
-            User user = getUser();
-            PageHelper.startPage(1, size);
-            List<ArticleWithBLOBs> articleList =
-                    articleDao.selectAllByPlusCategoryId(RoleUtils.checkPlus(user), category.getId());
-            for (ArticleWithBLOBs item : articleList) {
-                item.setCover(item.getCover().replace(imgBaseUrlFlag, imgBaseUrl));
-                item.setContent(item.getContent().replace(imgBaseUrlFlag, imgBaseUrl));
+        Response response = articleCategoryService.list(getUserId(), -1L, 0);
+        List<ArticleCategoryDTO> categoryList = JsonUtils.copyList(response.getData(), ArticleCategoryDTO.class);
+        for (ArticleCategoryDTO category : categoryList) {
+            if (category.getPlus() == 0 && category.getChildList() == null) {
+                Map<Object, Object> group = new HashMap<>();
+                group.put("title", category.getName());
+                User user = getUser();
+                PageHelper.startPage(1, size);
+                List<ArticleWithBLOBs> articleList =
+                        articleDao.selectAllByPlusCategoryId(RoleUtils.checkPlus(user), category.getId());
+                for (ArticleWithBLOBs item : articleList) {
+                    item.setCover(item.getCover().replace(imgBaseUrlFlag, imgBaseUrl));
+                    item.setContent(item.getContent().replace(imgBaseUrlFlag, imgBaseUrl));
+                }
+                List<ArticleDTO> articleDTOList = JsonUtils.copyList(articleList, ArticleDTO.class);
+                group.put("articleList", articleDTOList);
+                groupList.add(group);
             }
-            List<ArticleDTO> articleDTOList = JsonUtils.copyList(articleList, ArticleDTO.class);
-            group.put("articleList", articleDTOList);
-            groupList.add(group);
         }
         return Response.createBySuccess(groupList);
     }
