@@ -1,20 +1,15 @@
 package com.chhd.y.service.impl;
 
-import com.chhd.y.common.ArticleCategorySort;
 import com.chhd.y.common.Response;
-import com.chhd.y.dao.ArticleCategoryDAO;
-import com.chhd.y.dao.ArticleDAO;
-import com.chhd.y.dao.ArticleVisitDAO;
-import com.chhd.y.dao.UserDAO;
+import com.chhd.y.dao.*;
 import com.chhd.y.dto.ArticleCategoryDTO;
 import com.chhd.y.dto.ArticleDTO;
 import com.chhd.y.dto.ArticleVisitDTO;
-import com.chhd.y.pojo.ArticleCategory;
 import com.chhd.y.pojo.ArticleVisit;
 import com.chhd.y.pojo.ArticleWithBLOBs;
+import com.chhd.y.pojo.HomeVisit;
 import com.chhd.y.pojo.User;
 import com.chhd.y.service.ArticleCategoryService;
-import com.chhd.y.service.ArticleService;
 import com.chhd.y.service.HomeService;
 import com.chhd.y.util.JsonUtils;
 import com.chhd.y.util.PropertiesUtils;
@@ -26,7 +21,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +41,8 @@ public class HomeServiceImpl extends BaseService implements HomeService {
     private ArticleCategoryDAO articleCategoryDAO;
     @Autowired
     private ArticleCategoryService articleCategoryService;
+    @Autowired
+    private HomeVisitDAO homeVisitDao;
 
     @Override
     public Response banner(int size) {
@@ -112,5 +108,23 @@ public class HomeServiceImpl extends BaseService implements HomeService {
             }
         }
         return Response.createBySuccess(groupList);
+    }
+
+    @Override
+    public Response visit(Map map) {
+        HomeVisit record = new HomeVisit();
+        record.setSessionId(map.get("sessionId") + "");
+        if (map.get("userId") != null) {
+            record.setUserId(Long.parseLong(map.get("userId") + ""));
+            record.setUsername(map.get("username") + "");
+        }
+        if (map.get("os") != null) {
+            record.setOs(Integer.parseInt(map.get("os") + ""));
+        }
+        if (map.get("device") != null) {
+            record.setDevice(map.get("device") + "");
+        }
+        homeVisitDao.insert(record);
+        return Response.createBySuccess(record.getSessionId());
     }
 }

@@ -20,10 +20,8 @@ public class JwtUtils {
             Algorithm algorithm = Algorithm.HMAC256("secret");
             JWTVerifier jwtVerifier = JWT.require(algorithm).build();
             decodedJWT = jwtVerifier.verify(token);
-        } catch (TokenExpiredException | NullPointerException ignored) {
-            // Token过期
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignore) {
+
         }
         return decodedJWT;
     }
