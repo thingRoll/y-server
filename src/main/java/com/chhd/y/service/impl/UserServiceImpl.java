@@ -245,7 +245,7 @@ public class UserServiceImpl implements UserService {
         pageInfo.setList(userDTOList);
         PageInfoDTO pageInfoDTO = new PageInfoDTO();
         BeanUtils.copyProperties(pageInfo, pageInfoDTO);
-        return Response.createBySuccess(pageInfo);
+        return Response.createBySuccess(pageInfoDTO);
     }
 
     private String getRoleName(int role) {

@@ -2,26 +2,28 @@ package com.chhd.y.service.impl;
 
 import com.chhd.y.common.Response;
 import com.chhd.y.dao.*;
-import com.chhd.y.dto.ArticleCategoryDTO;
-import com.chhd.y.dto.ArticleDTO;
-import com.chhd.y.dto.ArticleVisitDTO;
+import com.chhd.y.dto.*;
 import com.chhd.y.pojo.ArticleVisit;
 import com.chhd.y.pojo.ArticleWithBLOBs;
 import com.chhd.y.pojo.HomeVisit;
 import com.chhd.y.pojo.User;
 import com.chhd.y.service.ArticleCategoryService;
+import com.chhd.y.service.ArticleService;
 import com.chhd.y.service.HomeService;
+import com.chhd.y.service.UserService;
 import com.chhd.y.util.JsonUtils;
 import com.chhd.y.util.PropertiesUtils;
 import com.chhd.y.util.RoleUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +45,10 @@ public class HomeServiceImpl extends BaseService implements HomeService {
     private ArticleCategoryService articleCategoryService;
     @Autowired
     private HomeVisitDAO homeVisitDao;
+    @Autowired
+    private ArticleService articleService;
+    @Autowired
+    private UserService userService;
 
     @Override
     public Response banner(int size) {
@@ -92,7 +98,7 @@ public class HomeServiceImpl extends BaseService implements HomeService {
         List<ArticleCategoryDTO> categoryList = JsonUtils.copyList(response.getData(), ArticleCategoryDTO.class);
         for (ArticleCategoryDTO category : categoryList) {
             if (category.getPlus() == 0 && category.getChildList() == null) {
-                Map<Object, Object> group = new HashMap<>();
+                Map<Object, Object> group = new LinkedHashMap<>();
                 group.put("title", category.getName());
                 User user = getUser();
                 PageHelper.startPage(1, size);
@@ -126,5 +132,18 @@ public class HomeServiceImpl extends BaseService implements HomeService {
         }
         homeVisitDao.insert(record);
         return Response.createBySuccess(record.getSessionId());
+    }
+
+    @Override
+    public Response count() {
+        Map<Object, Object> map = new LinkedHashMap<>();
+        Response response = articleService.list(getUserId(), 1, 0, null,
+                Maps.<String, String>newHashMap());
+        PageInfoDTO pageInfoDTO = (PageInfoDTO) response.getData();
+        map.put("articleCount", pageInfoDTO.getTotal());
+        response = userService.list(getUserId(), 1, 0);
+        pageInfoDTO= (PageInfoDTO) response.getData();
+        map.put("userCount", pageInfoDTO.getTotal());
+        return Response.createBySuccess(map);
     }
 }

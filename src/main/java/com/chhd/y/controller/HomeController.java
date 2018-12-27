@@ -59,4 +59,10 @@ public class HomeController extends BaseController {
         map.put("device", getDevice());
         return homeService.visit(map);
     }
+
+    @RequestMapping(value = "count.do", method = RequestMethod.GET)
+    @ResponseBody
+    public Response count() {
+        return homeService.count();
+    }
 }

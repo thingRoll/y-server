@@ -15,4 +15,6 @@ public interface HomeService {
     Response groupList(int size);
 
     Response visit(Map map);
+
+    Response count();
 }
