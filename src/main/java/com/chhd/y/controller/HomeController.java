@@ -3,6 +3,7 @@ package com.chhd.y.controller;
 import com.chhd.y.common.Response;
 import com.chhd.y.service.HomeService;
 import com.google.common.collect.Maps;
+import org.omg.CORBA.PUBLIC_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -65,4 +66,11 @@ public class HomeController extends BaseController {
     public Response count() {
         return homeService.count();
     }
+
+    @RequestMapping(value = "visit_chart.do", method = RequestMethod.GET)
+    @ResponseBody
+    public Response visitChart(@RequestParam(defaultValue = "week") String duration) {
+        return homeService.visitChart(duration);
+    }
+
 }

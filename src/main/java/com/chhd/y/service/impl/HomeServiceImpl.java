@@ -22,10 +22,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service("HomeService")
 public class HomeServiceImpl extends BaseService implements HomeService {
@@ -42,13 +40,13 @@ public class HomeServiceImpl extends BaseService implements HomeService {
     @Autowired
     private ArticleCategoryDAO articleCategoryDAO;
     @Autowired
-    private ArticleCategoryService articleCategoryService;
-    @Autowired
-    private HomeVisitDAO homeVisitDao;
-    @Autowired
     private ArticleService articleService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private HomeVisitDAO homeVisitDAO;
+    @Autowired
+    private ArticleCategoryService articleCategoryService;
 
     @Override
     public Response banner(int size) {
@@ -130,7 +128,7 @@ public class HomeServiceImpl extends BaseService implements HomeService {
         if (map.get("device") != null) {
             record.setDevice(map.get("device") + "");
         }
-        homeVisitDao.insert(record);
+        homeVisitDAO.insert(record);
         return Response.createBySuccess(record.getSessionId());
     }
 
@@ -142,8 +140,19 @@ public class HomeServiceImpl extends BaseService implements HomeService {
         PageInfoDTO pageInfoDTO = (PageInfoDTO) response.getData();
         map.put("articleCount", pageInfoDTO.getTotal());
         response = userService.list(getUserId(), 1, 0);
-        pageInfoDTO= (PageInfoDTO) response.getData();
+        pageInfoDTO = (PageInfoDTO) response.getData();
         map.put("userCount", pageInfoDTO.getTotal());
         return Response.createBySuccess(map);
+    }
+
+    @Override
+    public Response visitChart(String duration) {
+        List<VisitChartDTO> visitChartDTOList = new ArrayList<>();
+        if ("week".equals(duration)) {
+            visitChartDTOList = homeVisitDAO.selectByLastWeek();
+        } else if ("yearHalf".equals(duration)) {
+            visitChartDTOList = homeVisitDAO.selectByLastYearHalf();
+        }
+        return Response.createBySuccess(visitChartDTOList);
     }
 }

@@ -17,4 +17,6 @@ public interface HomeService {
     Response visit(Map map);
 
     Response count();
+
+    Response visitChart(String duration);
 }
