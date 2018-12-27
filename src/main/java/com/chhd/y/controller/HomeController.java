@@ -69,8 +69,9 @@ public class HomeController extends BaseController {
 
     @RequestMapping(value = "visit_chart.do", method = RequestMethod.GET)
     @ResponseBody
-    public Response visitChart(@RequestParam(defaultValue = "week") String duration) {
-        return homeService.visitChart(duration);
+    public Response visitChart(@RequestParam(defaultValue = "week") String duration,
+                               String pattern) {
+        return homeService.visitChart(duration, pattern);
     }
 
 }

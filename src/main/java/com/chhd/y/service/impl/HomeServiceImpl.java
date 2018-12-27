@@ -18,6 +18,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -146,12 +147,14 @@ public class HomeServiceImpl extends BaseService implements HomeService {
     }
 
     @Override
-    public Response visitChart(String duration) {
+    public Response visitChart(String duration, String pattern) {
         List<VisitChartDTO> visitChartDTOList = new ArrayList<>();
         if ("week".equals(duration)) {
-            visitChartDTOList = homeVisitDAO.selectByLastWeek();
+            pattern = StringUtils.isBlank(pattern) ? "%m-%d %a" : pattern;
+            visitChartDTOList = homeVisitDAO.selectByLastWeek(pattern);
         } else if ("yearHalf".equals(duration)) {
-            visitChartDTOList = homeVisitDAO.selectByLastYearHalf();
+            pattern = StringUtils.isBlank(pattern) ? "%y-%m" : pattern;
+            visitChartDTOList = homeVisitDAO.selectByLastYearHalf(pattern);
         }
         return Response.createBySuccess(visitChartDTOList);
     }

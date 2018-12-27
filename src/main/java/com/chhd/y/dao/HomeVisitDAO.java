@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface HomeVisitDAO extends MyBatisBaseDao<HomeVisit, Long> {
 
-    List<VisitChartDTO> selectByLastWeek();
+    List<VisitChartDTO> selectByLastWeek(String pattern);
 
-    List<VisitChartDTO> selectByLastYearHalf();
+    List<VisitChartDTO> selectByLastYearHalf(String pattern);
 }

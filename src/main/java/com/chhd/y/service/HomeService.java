@@ -18,5 +18,5 @@ public interface HomeService {
 
     Response count();
 
-    Response visitChart(String duration);
+    Response visitChart(String duration, String pattern);
 }
